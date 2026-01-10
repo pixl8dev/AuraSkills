@@ -5,8 +5,8 @@
 abilities:
   bountiful_harvest:
     name: Bohatá Sklizeň
-    desc: "Přidá +{value} štěstí při farmaření, které zvyšuje pravděpodobnost mimořádných dropů."
-    info: "+{value} štěstí při farmaření"
+    desc: "Přidá +{value} Šance v zemědělství, což zvyšuje šanci na dvojité dropy."
+    info: "+{value} Šance v zemědělství"
   farmer:
     name: Farmář
     desc: "Získejte o {value}% více XP při farmaření."
@@ -20,13 +20,13 @@ abilities:
     desc: "Zvyšuje nárůst nasycení pomocí rostlinných potravin o {value}."
     info: "+{value} Sytosti"
   growth_aura:
-    name: Aura Růstu
-    desc: "Plodiny s růstovými stadii v okruhu {radius} bloků rostou o {value} % rychleji."
-    info: "+{value} % Růstu"
+    name: Aura růstu
+    desc: "Plodiny v okruhu {radius} bloků od tebe rostou o {value}% rychleji."
+    info: "+{value}% Rychlost růstu"
   lumberjack:
     name: Dřevorubec
-    desc: "Přidá +{value} štěstí při získávání jídla, které zvyšuje pravděpodobnost mimořádných dropů."
-    info: "+{value} štěstí při získávání jídla"
+    desc: "Přidá +{value} Šance v lesnictví, což zvyšuje šanci na dvojité dropy."
+    info: "+{value} Šance v lesnictví"
   forager:
     name: Lesník
     desc: "Získejte o {value}% více XP při lesnictví."
@@ -45,8 +45,8 @@ abilities:
     info: "{value}% 3x Poškození Odolnosti"
   lucky_miner:
     name: Horník Štěstěny
-    desc: "Přidá +{value} štěstí při těžení, které zvyšuje pravděpodobnost mimořádných dropů."
-    info: "+{value} štěstí při těžení"
+    desc: "Přidá +{value} Šance v těžbě, což zvyšuje šanci na dvojité dropy."
+    info: "+{value} Šance v těžbě"
   miner:
     name: Horník
     desc: "Získej o {value}% více XP při těžení."
@@ -65,8 +65,8 @@ abilities:
     info: "{value}% Bez ztráty životnosti"
   lucky_catch:
     name: Úlovek štěstěny
-    desc: "Přidá +{value} štěstí při rybaření, které zvyšuje pravděpodobnost mimořádných dropů."
-    info: "+{value} štěstí při rybaření"
+    desc: "Přidá +{value} Šance v rybolovu, což zvyšuje šanci na chycení vzácných předmětů."
+    info: "+{value} Šance v rybolovu"
   fisher:
     name: Rybář
     desc: "Získejte o {value}% více XP k rybaření"
@@ -97,16 +97,16 @@ abilities:
     info: "+{value}% Poškození lopatou"
   bigger_scoop:
     name: Větší Naběračka
-    desc: "Přidá +{value} štěstí při kopání, které zvyšuje pravděpodobnost mimořádných dropů."
-    info: "+{value} % štěstí při kopání"
+    desc: "Přidá +{value} Šance v kopání, což zvyšuje šanci na dvojité dropy."
+    info: "+{value}% Šance v kopání"
   lucky_spades:
     name: Rýče štěstěny
     desc: "O {value}% vyšší šance na získání epické kořisti z kopání."
     info: "+{value}% Epická kořist"
   retrieval:
-    name: Znovunabytí
-    desc: "Šípy, s nimiž mineš, budou okamžitě získány zpět po {time} s v okruhu {value} bloků."
-    info: "{value} vzdálenost"
+    name: Návrat
+    desc: "Šípy, které minou cíl, se okamžitě vrátí po {time}s (až do vzdálenosti {value} bloků)."
+    info: "{value} Dosah návratu"
   archer:
     name: Střelec
     desc: "Získej o {value}% více XP k farmaření."
@@ -121,7 +121,7 @@ abilities:
     info: "{value}% Šance na Proražení"
   stun:
     name: Omráčení
-    desc: "{value}% chance to decrease enemy movement speed by {reduction_percent}% for 2 seconds."
+    desc: "{value}% šance na snížení rychlosti nepřítele o 20% na 2 sekundy."
     info: "{value}% Šance na Omráčení"
   shielding:
     name: Zaštítění
@@ -140,14 +140,14 @@ abilities:
     desc: "{value}% šance na úplné zrušení nepřátelského útoku."
     info: "Na {value}% Imunní"
   no_debuff:
-    name: No Debuff
+    name: Odolnost
     desc: "{value}% šance na zrušení škodlivého účinku lektvaru."
-    info: "{value}% No Debuff"
+    info: "{value}% Šance na zrušení efektu"
   parry:
-    name: Odražení
-    desc: "Missing a sword swing within {time}s before being hit reduces damage by {value}% and cancels knockback."
-    info: "{value} % snížení poškození"
-    parried: "<red>Útok odražen"
+    name: Vykrytí
+    desc: "Pokud mineš úder mečem {time}s před zásahem, snížíš poškození o {value}% a zrušíš odhození."
+    info: "{value}% Redukce poškození"
+    parried: "<red>Útok vykryt!"
   fighter:
     name: Bojovník
     desc: "Získej o {value}% více XP k bojování"
@@ -202,7 +202,7 @@ abilities:
     info: "{value}% Dlouhotrvající Rychlost"
   fleeting:
     name: Doznívání
-    desc: "Získáš +{value} Rychlost, pokud máš méně než 20 % zdraví."
+    desc: "Získej +{value} Rychlost, když máš méně než 20% zdraví."
     info: "+{value}% Rychlost"
     start: "<white>Právě jsi získal doznívající zvýšení rychlosti pohybu! <gray>(+{value}% Rychlost)"
     end: "<gray>Zvýšení rychlosti pohybu odeznělo"
@@ -233,7 +233,7 @@ abilities:
   xp_convert:
     name: Převaděč XP
     desc: "Získej 1 Minecraftí zkušenost za každých {value} Skill XP, které získaš."
-    info: "1 EXP/{value} Skill XP"
+    info: "1 MC EXP / {value} Skill XP"
   enchanter:
     name: Zaklínač
     desc: "Získej o {value}% více XP při enchantování."
@@ -274,7 +274,7 @@ abilities:
   disenchanter:
     name: Zaklínač
     desc: Získaní {value}% více zkušeností při zaklínaní Item pomocí grindstone.
-    info: "+{value}% Grindstone EXP"
+    info: "+{value}% XP z brusu"
   forger:
     name: Kovář
     desc: Získaní {value}% Více kovářských XP.
@@ -338,7 +338,7 @@ commands:
   armor:
     modifier:
       add:
-        added: "Added stat modifier to armor with stat: {stat}, value: {value}, operation: {operation}"
+        added: "{color}{stat} <gray>modifikátor (úroveň <aqua>{value}<gray>) byl přidán na tvůj předmět."
         already_exists: "<yellow>Modifikátor brnění se staty {color}{stat} &již existuje na tvém brnění! Odstraníš to pomocí with /sk armor modifier remove"
         desc: Adds an armor stat modifier to the item held, along with lore by default.
       remove:
@@ -422,8 +422,8 @@ commands:
       desc: Gives an item with a key from the item registry to a player.
     modifier:
       add:
-        added: "Added stat modifier to item with stat: {stat}, value: {value}, operation: {operation}"
-        already_exists: "<yellow>An item modifier with stat {color}{stat} <yellow>already exists on your item! Remove it first with /sk item modifier remove"
+        added: "{color}{stat} <gray>modifikátor (úroveň <aqua>{value}<gray>) byl přidán na předmět."
+        already_exists: "<yellow>Tento modifikátor již existuje! Odstraň ho pomocí /sk item modifier remove"
         desc: Adds an item stat modifier to the item held, along with lore by default.
       remove:
         does_not_exist: "&Tvůj item nemá {color}{stat} <yellow>modifikátor!"
@@ -580,13 +580,13 @@ commands:
     desc: Opens a plugin menu for a player with optional properties JSON and page number.
   preset:
     load:
-      confirm: "<red>Loading a preset will override your config files! The following files will be affected <gray>(<aqua>Appended<gray>, <yellow>Merged<gray>, <red>Replaced<gray>, <dark_red>Deleted<gray>): {entries} <red>This action cannot be undone, manually backup any files needed. Type the command again to confirm."
-      loaded: Successfully loaded preset {name}, restart the server now.
+      confirm: "<red>Načtení presetu přepíše konfiguraci! Ovlivněné soubory: {entries}. <red>Tato akce je nevratná. Zálohuj soubory a zadej příkaz znovu pro potvrzení."
+      loaded: Úspěšně načten preset {name}, restartuj server.
       created: Vytvořené soubory
-      modified: Modified files
-      replaced: Replaced files
-      deleted: Deleted files
-      skipped: Skipped files
+      modified: Upravené soubory
+      replaced: Nahrazené soubory
+      deleted: Smazané soubory
+      skipped: Přeskočené soubory
       desc: Loads a configuration preset from the presets folder.
   profile:
     skills:
@@ -645,8 +645,8 @@ commands:
     average_header_page: "<white>--==<aqua><bold>Průměrný žebříček dovedností </bold><white>(Page {page})==--"
     usage: "<yellow>Použij: <green>/sk top <white><page> <gray>or <green>/sk top <white>[skill] <page>"
   transfer:
-    success: "<green>Successfully transferred player data from <gray>{from} <green>to <gray>{to}"
-    error: "<red>There was an error transferring player data. Check console for errors."
+    success: "<green>Data úspěšně přenesena z <gray>{from} <green>na <gray>{to}"
+    error: "<red>Chyba při přenosu dat. Zkontroluj konzoli."
     desc: Transfers data from one user to another given the UUIDs.
   updateleaderboards:
     already_updating: "<yellow>Žebříček se již aktualizuje!"
@@ -671,8 +671,8 @@ commands:
       cooldown_reset: "<gray>Cooldown for <aqua>{ability} <gray>has been reset for player <gold>{player}"
       desc: Resets a specific mana ability cooldown for a player, optionally filling up mana.
   unknown_skill: "<yellow>Neznamá Dovednost!"
-  unknown_mana_ability: "<yellow>Unknown mana ability!"
-  unknown_stat: "<yellow>Unknown stat!"
+  unknown_mana_ability: "<yellow>Neznámá mana schopnost!"
+  unknown_stat: "<yellow>Neznámá statistika!"
   unknown_trait: "<yellow>Unknown trait!"
   no_profile: "<yellow>Hráč nemá profil dovedností!"
 leveler:
@@ -680,9 +680,9 @@ leveler:
   skill_level_up: Dovednosticky Level Up
   rewards: Odměna
   ability_unlock: Ability Odemčen
-  ability_level_up: Ability Level Up
+  ability_level_up: Úroveň schopnosti zvýšena
   mana_ability_unlock: Mana Ability Odemčený
-  mana_ability_level_up: Mana Ability Level Up
+  mana_ability_level_up: Úroveň mana schopnosti zvýšena
   unclaimed_item: "<red>Máš nevyzvednuté položky, protože tvůj inventář byl plný, použij <yellow>/skills claimitems <red>pro vyzvednuti"
 menus:
   common:
@@ -696,15 +696,15 @@ menus:
     duration: "Trvání"
     mana_cost: "Cena Many"
     cooldown: "Odpočet"
-    damage: "Damage"
-    max_mana_cost: "Max Mana Cost"
-    attack_speed: "Attack Speed"
+    damage: "Poškození"
+    max_mana_cost: "Max cena many"
+    attack_speed: "Rychlost útoku"
     back: "Jdi zpátky"
     back_click: "Zpět do nabídky dovedností"
     unlocked: "ODEMČENÁ"
     in_progress: "PRAVĚ PROBÍHÁ"
     locked: "ZAMKNUTO"
-    your_level: "Your Level"
+    your_level: "Tvůj Level"
     next_page: "Další strana"
     next_page_click: "Kliknutím přejdeš na další stránku"
     previous_page: "Předchozí stránka"
@@ -722,9 +722,9 @@ menus:
     your_skills_hover: "Umístěním ukazatele myši na dovednost zobrazíš další informace!"
     your_skills_click: "Kliknutím na dovednost zobrazíš postup na úroveň!"
     skill_click: "Klikni pro zobrazení Level Progression!"
-    stats: "Stats"
-    stats_desc: "Earn stat buffs by leveling up skills"
-    stats_click: "Click to learn more or view your stats"
+    stats: "Statistiky"
+    stats_desc: "Zvyšuj levely a získávej bonusy."
+    stats_click: "Klikni pro zobrazení statistik"
     active_job: Active Job
   level_progression:
     level_progression_title: "{skill} Levely - Strana {page}"
@@ -735,14 +735,14 @@ menus:
     ability_unlock: "Ability Odemčena"
     mana_ability_unlock: "Mana Ability Odemčena"
     progress: "Průběh"
-    leaderboard_click: "Click to view the {skill} leaderboard"
-    sources: "XP Sources"
-    sources_desc: "The sources menu shows all the ways you can earn XP in a skill, as well as how much XP each source gives."
-    sources_click: "Click to view {skill} sources"
-    abilities: "Abilities"
-    abilities_desc: "<2>Abilities</2> <1>are passive perks you unlock and upgrade as you level up skills.</1>"
-    mana_abilities_desc: "<3>Mana Abilities</3> <1>are a special type of ability that requires activation and consumes mana.</1>"
-    abilities_click: "Click to view {skill} abilities"
+    leaderboard_click: "Klikni pro žebříček {skill}"
+    sources: "Zdroje XP"
+    sources_desc: "Seznam způsobů, jak získat XP."
+    sources_click: "Klikni pro zobrazení zdrojů"
+    abilities: "Schopnosti"
+    abilities_desc: "<2>Schopnosti</2> <1>jsou pasivní výhody.</1>"
+    mana_abilities_desc: "<3>Mana schopnosti</3> <1>jsou aktivní schopnosti za manu.</1>"
+    abilities_click: "Klikni pro zobrazení schopností"
     job: Job
     job_desc: Selecting {skill} as your job allows you to earn money while gaining XP.
     job_select: Left click to select {skill} as your job
@@ -754,31 +754,31 @@ menus:
     stats_title: Tvé statistiky
     skills: "Dovednosti"
     added_drop: "+{value} Drop"
-    added_drops: "+{value} Drops"
-    chance_drop: "{chance}% for +{value} Drop"
-    chance_drops: "{chance}% for +{value} Drops"
-    stat_info_click: "Click to view stat details"
+    added_drops: "+{value} Dropů"
+    chance_drop: "{chance}% na +{value} Drop"
+    chance_drops: "{chance}% na +{value} Dropů"
+    stat_info_click: "Klikni pro zobrazení detailů"
   unclaimed_items:
     unclaimed_items_title: "Získej předměty"
     inventory_full: "Nemáš dostatek místa ve svém inventáři, abys sis tento předmět mohli nárokovat"
     click_to_claim: "Klikni pro Claimnutí!"
   leaderboard:
-    leaderboard_title: "{skill} Leaderboard"
+    leaderboard_title: "{skill} Žebříček"
   sources:
-    sources_title: "{skill} XP Sources"
-    sorter: "Sort XP Sources"
-    descending: "Highest to Lowest"
-    ascending: "Lowest to Highest"
-    alphabetical: "Name (A-Z)"
-    reverse_alphabetical: "Name (Z-A)"
-    sort_click: "Click to cycle sort type"
-    multiplied_xp: "Multiplied {xp_unit}"
-    multiplied_desc: "This is the XP you will actually earn based on your current XP multipliers"
+    sources_title: "{skill} Zdroje XP"
+    sorter: "Seřadit zdroje"
+    descending: "Od nejvyššího"
+    ascending: "Od nejnižšího"
+    alphabetical: "Jméno (A-Z)"
+    reverse_alphabetical: "Jméno (Z-A)"
+    sort_click: "Klikni pro změnu řazení"
+    multiplied_xp: "Výsledné XP"
+    multiplied_desc: "XP, které skutečně získáš (včetně násobičů)."
   abilities:
-    abilities_title: "{skill} Abilities"
-    description: "Description"
-    unlocked_at: "<1>Unlocked at <2>{skill} {level}"
-    next_upgrade_at: "<1>Next upgrade at <2>{skill} {level}"
+    abilities_title: "{skill} Schopnosti"
+    description: "Popis"
+    unlocked_at: "<1>Odemčeno na <2>{skill} {level}"
+    next_upgrade_at: "<1>Další vylepšení na <2>{skill} {level}"
   stat_info:
     stat_details: "{stat_name} Stat"
     stat: "Stat"
@@ -888,13 +888,13 @@ skills:
     desc: "Procházej se a spusť pro získaní zkušenosti {xp_unit}"
   agility:
     name: Agility
-    desc: "Move around and take fall damage to earn Agility {xp_unit}"
+    desc: "Za pohyb a zranění pádem získáš XP do Obratnosti."
   alchemy:
     name: Alchemie
-    desc: "Brew and splash potions to earn Alchemy {xp_unit}"
+    desc: "Za vaření a házení lektvarů získáš XP do Alchymie."
   enchanting:
     name: Enchanting
-    desc: "Enchant, combine, and grindstone items earn Enchanting {xp_unit}"
+    desc: "Za očarování, spojování a použití brusu získáš XP do Očarování."
   sorcery:
     name: Čarodějnictví
     desc: "Použij schopnost many k získání Sorceru {xp_unit}"
@@ -906,66 +906,66 @@ skills:
     desc: "=Kombinuj knihy v kovadlině na Vydělávej jako kováč {xp_unit}"
 sources:
   fishing:
-    cod: Cod
-    salmon: Salmon
-    tropical_fish: Tropical Fish
-    pufferfish: Pufferfish
-    treasure: Treasure Items
-    junk: Junk Items
-    rare: Rare Loot
-    epic: Epic Loot
+    cod: Treska
+    salmon: Losos
+    tropical_fish: Tropická ryba
+    pufferfish: Čtverzubec
+    treasure: Poklad
+    junk: Odpad
+    rare: Vzácná kořist
+    epic: Epická kořist
   damage:
-    mob_damage: Damage from Mobs
-    player_damage: Damage from Players
-    fall_damage: Taking Fall Damage
+    mob_damage: Poškození od mobů
+    player_damage: Poškození od hráčů
+    fall_damage: Poškození pádem
   statistic:
-    walk_per_meter: Walking
-    sprint_per_meter: Sprinting
-    swim_per_meter: Swimming
+    walk_per_meter: Chůze
+    sprint_per_meter: Sprint
+    swim_per_meter: Plavání
   jumping:
-    jump_per_100: Jumping
+    jump_per_100: Skákání
   brewing:
-    awkward: Brew Awkward Potion
-    regular: Brew Regular Potion
-    extended: Brew Extended Duration Potion
-    upgraded: Brew Upgraded Potion
-    splash: Brew Splash Potion
-    lingering: Brew Lingering Potion
+    awkward: Uvaření Awkward Potion
+    regular: Uvaření běžného lektvaru
+    extended: Uvaření prodlouženého lektvaru
+    upgraded: Uvaření vylepšeného lektvaru (Level II)
+    splash: Uvaření házecího lektvaru
+    lingering: Uvaření doznívajícího lektvaru
   enchanting:
-    weapon_per_level: Enchant Weapon
-    armor_per_level: Enchant Armor
-    tool_per_level: Enchant Tool
-    book_per_level: Enchant Book
+    weapon_per_level: Očarování zbraně
+    armor_per_level: Očarování brnění
+    tool_per_level: Očarování nástroje
+    book_per_level: Očarování knihy
   mana_ability_use:
-    mana_ability_use: Using Mana Abilities
+    mana_ability_use: Použití mana schopnosti
   item_consume:
-    drink_regular: Drink Regular Potion
-    drink_extended: Drink Extended Duration Potion
-    drink_upgraded: Drink Upgraded Potion
-    golden_apple: Consume Golden Apple
-    enchanted_golden_apple: Consume Enchanted Golden Apple
+    drink_regular: Vypití běžného lektvaru
+    drink_extended: Vypití prodlouženého lektvaru
+    drink_upgraded: Vypití vylepšeného lektvaru
+    golden_apple: Snězení zlatého jablka
+    enchanted_golden_apple: Snězení Enchanted Golden Apple
   potion_splash:
-    splash_regular: Splash Regular Potion
-    splash_extended: Splash Extended Duration Potion
-    splash_upgraded: Splash Upgraded Potion
-    lingering_regular: Use Regular Lingering Potion
-    lingering_extended: Use Extended Duration Lingering Potion
-    lingering_upgraded: Use Upgraded Lingering Potion
+    splash_regular: Hození běžného lektvaru
+    splash_extended: Hození prodlouženého lektvaru
+    splash_upgraded: Hození vylepšeného lektvaru
+    lingering_regular: Použití doznívajícího lektvaru
+    lingering_extended: Použití prodlouženého doznívajícího lektvaru
+    lingering_upgraded: Použití vylepšeného doznívajícího lektvaru
   anvil:
-    combine_books_per_level: Combine Enchanted Books
-    combine_weapon_per_level: Combine Weapon with Book
-    combine_armor_per_level: Combine Armor with Book
-    combine_tool_per_level: Combine Tool with Book
+    combine_books_per_level: Spojení knih
+    combine_weapon_per_level: Spojení zbraně s knihou
+    combine_armor_per_level: Spojení brnění s knihou
+    combine_tool_per_level: Spojení nástroje s knihou
   grindstone:
-    grindstone_per_level: Disenchant Item with Grindstone
+    grindstone_per_level: Odčarování na brusu
   units:
-    damage: Damage
-    meter: Meter
-    100_jumps: 100 Jumps
-    mana: Mana Consumed
-    combine_level: Anvil Cost Experience
-    grindstone_level: Level of Enchant on Item
-    enchant_level: Level of Enchant Received
+    damage: Poškození
+    meter: Metry
+    100_jumps: 100 skoků
+    mana: Spotřebovaná mana
+    combine_level: Cena v levelech (Kovadlina)
+    grindstone_level: Level očarování
+    enchant_level: Level získaného očarování
 stats:
   strength:
     name: Strength
@@ -978,7 +978,7 @@ stats:
     desc: "Regenerace zvyšuje tvojí rychlost Obnovení zdraví i many."
   luck:
     name: Štěstí
-    desc: "Luck increases the chance of extra drops from blocks in gathering skills."
+    desc: "Zvyšuje šanci na získání extra předmětů při těžbě a sběru."
   wisdom:
     name: Moudrost
     desc: "Moudrost zvyšuje tvoji maximální manu, zvyšuje Získávání zkušeností a snižuje náklad na kovadlinu."
@@ -986,57 +986,57 @@ stats:
     name: Odolnost
     desc: "Tvrdost zvyšuje množství poškození snížených při útoku nepřítelem."
   crit_chance:
-    name: Crit Chance
-    desc: "Crit Chance is your odds to deal a critical hit."
+    name: Krit. šance
+    desc: "Šance na udělení kritického zásahu."
   crit_damage:
-    name: Crit Damage
-    desc: "Crit Damage is the percentage increase in damage when dealing a critical hit."
+    name: Krit. poškození
+    desc: "O kolik procent je silnější kritický zásah."
   speed:
-    name: Speed
+    name: Rychlost
     desc: "Speed increases how fast you can walk and run"
 traits:
   attack_damage:
-    name: Attack Damage
+    name: Poškození útokem
   hp:
-    name: HP
+    name: Zdraví
   saturation_regen:
-    name: Saturation Regen
+    name: Obnova nasycení
   hunger_regen:
-    name: Hunger Regen
+    name: Obnova hladu
   mana_regen:
-    name: Mana Regen
+    name: Obnova many
   luck:
-    name: Luck Attribute
+    name: Štěstí
   double_drop:
-    name: Double Drop
+    name: Dvojitý drop
   experience_bonus:
-    name: Experience Bonus
+    name: Bonus k XP
   anvil_discount:
-    name: Anvil Discount
+    name: Sleva v kovadlině
   max_mana:
     name: Max Mana
   damage_reduction:
-    name: Damage Reduction
+    name: Redukce poškození
   crit_chance:
-    name: Crit Chance
+    name: Krit. šance
   crit_damage:
-    name: Crit Damage
+    name: Krit. poškození
   movement_speed:
-    name: Movement Speed
+    name: Rychlost pohybu
   farming_luck:
-    name: Farming Luck
+    name: Šance ve farmaření
   foraging_luck:
-    name: Foraging Luck
+    name: Šance v lesnictví
   mining_luck:
-    name: Mining Luck
+    name: Šance v těžbě
   excavation_luck:
-    name: Excavation Luck
+    name: Šance v kopání
   fishing_luck:
-    name: Fishing Luck
+    name: Šance v rybaření
 ui:
-  maxed: MAXED
+  maxed: MAX
 units:
   mana: Mana
   hp: HP
   xp: XP
-file_version: 39
+file_version: 31
