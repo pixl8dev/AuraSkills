@@ -494,23 +494,23 @@ commands:
     ignore:
       add:
         added: "<gray>Tvůj předmět bude nyní ignorován interakcemi manových schopností"
-        desc: Adds the tag that ignores the held item from mana ability interactions.
+        desc: Přidá značku, díky které bude držený předmět ignorován interakcemi manových schopností.
       remove:
-        removed: "<gray>Your item will no longer be ignored by mana ability interactions"
-        desc: Removes the tag that ignores the held item from mana ability interactions.
+        removed: "<gray>Tvůj předmět již nebude ignorován interakcemi manových schopností"
+        desc: Odstraní značku, díky které je držený předmět ignorován interakcemi manových schopností.
   jobs:
     add:
-      added: "<white>The job {job} was successfully added to player {player}"
-      limited: "<yellow>Cannot add this job because player {player} has reached the job limit"
-      existing: "<yellow>Player {player} already has the job {job}"
-      desc: Adds a skill as a job for yourself or a specified player.
+      added: "<white>Práce {job} byla úspěšně přidána hráči {player}"
+      limited: "<yellow>Tuto práci nelze přidat, protože hráč {player} dosáhl limitu prací"
+      existing: "<yellow>Hráč {player} již má práci {job}"
+      desc: Přidá dovednost jako práci pro tebe nebo zadaného hráče.
     remove:
-      removed: "<white>Removed job {job} from player {player}"
-      unchanged: "<yellow>Nothing was changed since player {player} does not have the job {job}"
-      desc: Removes a skill as a job for yourself or a specified player.
+      removed: "<white>Práce {job} byla odebrána hráči {player}"
+      unchanged: "<yellow>Nic se nezměnilo, protože hráč {player} nemá práci {job}"
+      desc: Odstraní dovednost jako práci pro tebe nebo zadaného hráče.
     removeall:
-      removed: "<white>Removed all jobs from player {player}"
-      desc: Removes all joined jobs for yourself or a specified player.
+      removed: "<white>Hráči {player} byly odebrány všechny práce"
+      desc: Odstraní všechny práce pro tebe nebo zadaného hráče.
   lang:
     set: "<gray>Jazyk nastaven na <aqua>{lang}"
     not_found: "<yellow>Jazyk nenalezen!"
@@ -523,11 +523,11 @@ commands:
       added: "<gray>Přidáno <aqua>{amount} {mana_unit} <gray>hráči <gold>{player}"
       desc: Přidá hráči manu
     remove:
-      removed: "<gray>Removed <aqua>{amount} {mana_unit} <gray>from player <gold>{player}"
-      desc: Removes mana from a player
+      removed: "<gray>Odebráno <aqua>{amount} {mana_unit} <gray>hráči <gold>{player}"
+      desc: Odebere hráči manu
     set:
-      set: "<gray>Set player <gold>{player} <gray>to <aqua>{amount} {mana_unit}"
-      desc: Sets the mana of a player
+      set: "<gray>Hráči <gold>{player} <gray>nastaveno <aqua>{amount} {mana_unit}"
+      desc: Nastaví hráči manu
     at_least_zero: "<yellow>{mana_unit} musí být alespoň nula!"
     console_specify_player: "<yellow>Konzole musí specifikovat hráče!"
   modifier:
@@ -548,95 +548,95 @@ commands:
       one_stat_header: "<gray>Statistiky modifiery ({color}{stat}<gray>) pro hráče <gold>{player}:"
       one_stat_entry: "  <white>{name} - {color}{stat} <white>Level <gold>{value}"
       players_only: "<yellow>Pouze hráči mohou uvést své vlastní modifikátory! Zkus zadat hráče"
-      desc: Lists all or a specific stat's modifiers for a player.
+      desc: Vypíše všechny modifikátory nebo modifikátory konkrétní statistiky pro hráče.
     removeall:
       removed_all_stats: "<gray>Odstraněno <aqua>{num} <gray>statistiky modifikatoru hrace<gold>{player}"
       removed_one_stat: "<gray>Odsraněno <aqua>{num} {color}{stat} <gray>modifier pro hráče <gold>{player}"
       players_only: "<yellow>Pouze hráči mohou odstranit své vlastní modifikátory! Zkus zadat hráče"
-      desc: Removes all stat modifiers from a player.
+      desc: Odstraní hráči všechny modifikátory statistik.
   trait:
     add:
-      already_exists: "<yellow>Modifier with name {name} already exists on player <gold>{player}<yellow>! Remove it with <gold>/sk trait remove {player} {name}"
-      desc: Adds a trait modifier to a player.
+      already_exists: "<yellow>Modifikátor s názvem {name} již u hráče <gold>{player}<yellow> existuje! Odstraň jej pomocí <gold>/sk trait remove {player} {name}"
+      desc: Přidá hráči modifikátor vlastnosti.
     addtemp:
-      added: "Added temporary trait modifier to {player} with trait: {trait}, name: {name}, value: {value}, duration: {duration}"
-      desc: Adds a temporary trait modifier to a player.
+      added: "Hráči {player} byl přidán dočasný modifikátor vlastnosti s vlastností: {trait}, název: {name}, hodnota: {value}, trvání: {duration}"
+      desc: Přidá hráči dočasný modifikátor vlastnosti.
     remove:
-      desc: Removes a specific trait modifier from a player.
+      desc: Odstraní konkrétní modifikátor vlastnosti hráče.
     list:
-      all_traits_header: "<gray>Trait modifiers for player <gold>{player}:"
-      one_trait_header: "<gray>Trait modifiers ({color}{trait}<gray>) for player <gold>{player}:"
-      desc: Lists all or a specific trait's modifiers for a player.
+      all_traits_header: "<gray>Modifikátory vlastností pro hráče <gold>{player}:"
+      one_trait_header: "<gray>Modifikátory vlastností ({color}{trait}<gray>) pro hráče <gold>{player}:"
+      desc: Vypíše všechny modifikátory nebo modifikátory konkrétní vlastnosti pro hráče.
     removeall:
-      removed_all_traits: "<gray>Removed <aqua>{num} <gray>trait modifiers from player <gold>{player}"
-      desc: Removes all trait modifiers from a player.
+      removed_all_traits: "<gray>Odstraněno <aqua>{num} <gray>modifikátorů vlastností z hráče <gold>{player}"
+      desc: Odstraní všechny modifikátory vlastností hráče.
   multiplier:
     global: Global
     list: "<white>Global XP multiplikátor pro <gold>{player}<white>: <aqua>{multiplier}x / +{percent}%"
     skill_entry: "<aqua>{skill} <white>XP multiplikátor: <aqua>{multiplier}x / +{percent}%"
     players_only: "<yellow>Pouze hráči mohou uvést svůj vlastní multiplikátor! Urči hráče!"
-    desc: Shows a player's current XP multiplier based on their permissions.
+    desc: Zobrazí aktuální násobič XP hráče na základě jeho oprávnění.
   openmenu:
-    desc: Opens a plugin menu for a player with optional properties JSON and page number.
+    desc: Otevře menu pluginu pro hráče s volitelnými JSON vlastnostmi a číslem stránky.
   preset:
     load:
-      confirm: "<red>Načtení presetu přepíše konfiguraci! Ovlivněné soubory: {entries}. <red>Tato akce je nevratná. Zálohuj soubory a zadej příkaz znovu pro potvrzení."
+      confirm: "<red>Načtení předvolby přepíše tvé konfigurační soubory! Následující soubory budou ovlivněny <gray>(<aqua>Připojeno<gray>, <yellow>Sloučeno<gray>, <red>Nahrazeno<gray>, <dark_red>Smazáno<gray>): {entries} <red>Tato akce je nevratná, ručně zálohuj všechny potřebné soubory. Pro potvrzení zadej příkaz znovu."
       loaded: Úspěšně načten preset {name}, restartuj server.
       created: Vytvořené soubory
       modified: Upravené soubory
       replaced: Nahrazené soubory
       deleted: Smazané soubory
       skipped: Přeskočené soubory
-      desc: Loads a configuration preset from the presets folder.
+      desc: Načte konfigurační předvolbu ze složky s předvolbami.
   profile:
     skills:
-      header: "Skills profile for <gold>{name}:\n<gray>UUID: <white>{uuid}\n<gray>Skills:{skill_entries}"
-      entry: "\n  <dark_aqua>{skill} <gray>- Level: <white>{level}<gray>, XP: <white>{xp}"
-      desc: Shows the skill levels and XP for any player, including offline players.
+      header: "Profil dovedností pro <gold>{name}:<gray>UUID: <white>{uuid}<gray>Dovednosti:{skill_entries}"
+      entry: "\n<dark_aqua>{skill} <gray>- Úroveň: <white>{level}<gray>, XP: <white>{xp}"
+      desc: Zobrazí úrovně dovedností a XP libovolného hráče, včetně offline hráčů.
     stats:
-      header: "Stats profile for <gold>{name}:\n<gray>UUID: <white>{uuid}\n<gray>Stats:{stat_entries}"
-      entry: "\n  <dark_aqua>{stat} <gray>- Total Level: <white>{total_level}<gray>, Base Level: <white>{base_level}<gray>, Modified Level: <white>{modified_level}"
-      desc: Shows the stat levels for any player, including offline players.
+      header: "Profil statistik pro <gold>{name}:<gray>UUID: <white>{uuid}<gray>Statistiky:{stat_entries}"
+      entry: "\n<dark_aqua>{stat} <gray>- Celková úroveň: <white>{total_level}<gray>, Základní úroveň: <white>{base_level}<gray>, Upravená úroveň: <white>{modified_level}"
+      desc: Zobrazí úrovně statistik libovolného hráče, včetně offline hráčů.
   rank:
     header: "<aqua><bold>Tvoje hodnocená dovednost"
     power: "<yellow>Energie <gray>(Všechna dovednost): <white>#{rank} z {total}"
     entry: "<aqua>{skill}<gray>: <white>#{rank} of {total}"
-    desc: Shows your skill rankings.
+    desc: Zobrazí tvé umístění v žebříčku dovedností.
   reload:
-    reloaded: "<green>Config reloaded!"
-    desc: Reloads the config, messages, menus, loot tables, action bars, boss bars, and health and luck stats.
+    reloaded: "<green>Konfigurace znovu načtena!"
+    desc: Znovu načte konfiguraci, zprávy, menu, tabulky kořisti, akční lišty, lišty bossů a statistiky zdraví a štěstí.
   resethealth:
-    desc: Removes all attribute modifiers by AuraSkills for easy uninstalling. This only works on offline players.
+    desc: Odstraní všechny modifikátory atributů od AuraSkills pro snadnou odinstalaci. Funguje pouze u offline hráčů.
   save:
     already_saving: "<yellow>Data jsou již ukládaná!"
     mysql_not_enabled: "<yellow>MySQL nebyl povolen při spuštění serveru, místo toho se ukládá do souboru!"
     saved: "<green>Dovednostni data ulozena!"
-    desc: Saves skill data.
+    desc: Uloží data dovedností.
   skill:
     addlevel:
-      desc: Adds a specific number of levels to a skill.
+      desc: Přidá dovednosti konkrétní počet úrovní.
     setall:
       set: "<gray>Všechny dovednosti nastavené na level <aqua>{level} <gray>pro hráče <gold>{player}"
-      desc: Sets all of a player's skills to a level.
+      desc: Nastaví všechny dovednosti hráče na určitou úroveň.
     setlevel:
       set: "<gray>Dovednosti <aqua>{skill} <gray>nastavena na level <aqua>{level} <gray>pro hráče <gold>{player}"
-      desc: Sets a specific skill to a level for a player.
+      desc: Nastaví konkrétní dovednost hráče na určitou úroveň.
     reset:
-      desc: Resets all skills or a specific skill to the starting level for a player.
+      desc: Resetuje všechny dovednosti nebo konkrétní dovednost hráče na počáteční úroveň.
     at_least: "<yellow>Úroveň musí být alespoň {level}!"
   skills:
-    desc: Opens the Skills menu where you can browse skills, progress, and abilities.
+    desc: Otevře menu dovedností, kde si můžeš prohlédnout dovednosti, postup a schopnosti.
   stats:
-    desc: Opens the Stats menu where you can see current stat levels and descriptions.
+    desc: Otevře menu statistik, kde si můžeš prohlédnout aktuální úrovně statistik a popisy.
   sources:
-    desc: Opens the Sources menu to see all XP sources for a skill.
+    desc: Otevře menu zdrojů, kde si můžeš prohlédnout všechny zdroje XP pro dovednost.
   toggle:
     enabled: "<green>Panel akcí tvých dovedností byl aktivován"
     disabled: "<red>Panel akcí tvých dovedností byl deaktivován"
     not_enabled: "<yellow>Panel akcí dovedností není na tomto serveru povolen!"
-    desc: Toggles your own skills action bar.
+    desc: Přepne tvůj action bar dovedností.
   top:
-    desc: Shows the top players in a skill
+    desc: Zobrazí nejlepší hráče v dovednosti
     power_header: "<white>--==<aqua><bold>Žebříček všech dovedností</bold><white>==--"
     power_header_page: "<white>--==<aqua><bold>Žebříček všech dovedností </bold><white>(Page {page})==--"
     skill_header: "<white>--==<aqua><bold>{skill} Žebříček<white>==--"
@@ -647,33 +647,33 @@ commands:
   transfer:
     success: "<green>Data úspěšně přenesena z <gray>{from} <green>na <gray>{to}"
     error: "<red>Chyba při přenosu dat. Zkontroluj konzoli."
-    desc: Transfers data from one user to another given the UUIDs.
+    desc: Přenese data z jednoho hráče na druhého na základě zadaných UUID.
   updateleaderboards:
     already_updating: "<yellow>Žebříček se již aktualizuje!"
     updated: "<green>Žebříček aktualizován!"
-    desc: Updates and sorts the leaderboards.
+    desc: Aktualizuje a seřadí žebříčky.
   version:
-    version: "<white>You are on AuraSkills <aqua>{current_version}<white>. The latest version is <aqua>{latest_version}"
-    new_update: "{prefix}<white>New update available! You are on version <aqua>{current_version}<white>, latest version is <aqua>{latest_version}\n{prefix}<white>Download it on Modrinth: <yellow><underlined>{link}"
-    desc: Shows the currently installed and latest available version of the plugin.
+    version: "<white>Používáš AuraSkills <aqua>{current_version}<white>. Nejnovější verze je <aqua>{latest_version}"
+    new_update: "{prefix}<white>Je dostupná nová aktualizace! Používáš verzi <aqua>{current_version}<white>, nejnovější verze je <aqua>{latest_version}{prefix}<white>Stáhni si ji na Modrinth: <yellow><underlined>{link}"
+    desc: Zobrazí aktuálně nainstalovanou a nejnovější dostupnou verzi pluginu.
   xp:
     add:
-      added: "<gray>Added <aqua>{amount} {skill} <gray>XP to player <gray>{player}"
-      desc: Adds skill XP to a player for a certain skill.
+      added: "<gray>Přidáno <aqua>{amount} {skill} <gray>XP hráči <gray>{player}"
+      desc: Přidá hráči XP do konkrétní dovednosti.
     set:
-      set: "<gray>Set <aqua>{skill} <gray>XP for player <gray>{player} <gray>to {amount}"
-      desc: Sets a player's skill XP for a certain skill to an amount.
+      set: "<gray>Nastaveno <aqua>{skill} <gray>XP hráči <gray>{player} <gray>na {amount}"
+      desc: Nastaví hráči XP konkrétní dovednosti na zadanou hodnotu.
     remove:
-      removed: "<gray>Removed <aqua>{amount} {skill} <gray>XP from player <gold>{player}"
-      desc: Removes skill XP from a player in a certain skill.
+      removed: "<gray>Odebráno <aqua>{amount} {skill} <gray>XP hráči <gold>{player}"
+      desc: Odebere hráči XP v konkrétní dovednosti.
   manaability:
     resetcooldown:
-      cooldown_reset: "<gray>Cooldown for <aqua>{ability} <gray>has been reset for player <gold>{player}"
-      desc: Resets a specific mana ability cooldown for a player, optionally filling up mana.
+      cooldown_reset: "<gray>Odpočet pro <aqua>{ability} <gray>byl resetován pro hráče <gold>{player}"
+      desc: Resetuje odpočet konkrétní manové schopnosti hráče, volitelně doplní manu.
   unknown_skill: "<yellow>Neznamá Dovednost!"
   unknown_mana_ability: "<yellow>Neznámá mana schopnost!"
   unknown_stat: "<yellow>Neznámá statistika!"
-  unknown_trait: "<yellow>Unknown trait!"
+  unknown_trait: "<yellow>Neznámá vlastnost!"
   no_profile: "<yellow>Hráč nemá profil dovedností!"
 leveler:
   level_up: "{skill} Level Up"
@@ -709,12 +709,12 @@ menus:
     next_page_click: "Kliknutím přejdeš na další stránku"
     previous_page: "Předchozí stránka"
     previous_page_click: "Kliknutím přejdeš na předchozí stránku"
-    trait: "Trait"
-    trait_gain: "<1>You gain {color}{level_modifier} {trait_name} <1>trait level per {color}1 {stat_name} <1>stat level."
-    trait_level: "Trait Level"
-    base: "Base"
-    modifiers_additive: "Modifiers (Additive)"
-    modifiers_multiplicative: "Modifiers (Multiplicative)"
+    trait: "Vlastnost"
+    trait_gain: "<1>Získáváš {color}{level_modifier} <1>úroveň vlastnosti {trait_name} za {color}1 <1>úroveň statistiky {stat_name}."
+    trait_level: "Úroveň vlastnosti"
+    base: "Základ"
+    modifiers_additive: "Modifikátory (Aditivní)"
+    modifiers_multiplicative: "Modifikátory (Multiplikativní)"
   skills:
     skills_title: "Tvoje dovednosti"
     your_skills: "Tvé dovednosti"
@@ -723,9 +723,9 @@ menus:
     your_skills_click: "Kliknutím na dovednost zobrazíš postup na úroveň!"
     skill_click: "Klikni pro zobrazení Level Progression!"
     stats: "Statistiky"
-    stats_desc: "Zvyšuj levely a získávej bonusy."
+    stats_desc: "Získávej bonusy ke statistikám zvyšováním úrovně dovedností"
     stats_click: "Klikni pro zobrazení statistik"
-    active_job: Active Job
+    active_job: Aktivní práce
   level_progression:
     level_progression_title: "{skill} Levely - Strana {page}"
     your_ranking: "Tvoje hodnocená dovednost"
@@ -738,18 +738,18 @@ menus:
     leaderboard_click: "Klikni pro žebříček {skill}"
     sources: "Zdroje XP"
     sources_desc: "Seznam způsobů, jak získat XP."
-    sources_click: "Klikni pro zobrazení zdrojů"
+    sources_click: "Kliknutím zobrazíš zdroje pro {skill}"
     abilities: "Schopnosti"
     abilities_desc: "<2>Schopnosti</2> <1>jsou pasivní výhody.</1>"
     mana_abilities_desc: "<3>Mana schopnosti</3> <1>jsou aktivní schopnosti za manu.</1>"
-    abilities_click: "Klikni pro zobrazení schopností"
-    job: Job
-    job_desc: Selecting {skill} as your job allows you to earn money while gaining XP.
-    job_select: Left click to select {skill} as your job
-    job_active: You are actively working this job
-    job_quit: Right click to quit this job
-    job_limit: You have reached your limit on jobs. Quit an active job first to select this one.
-    job_cooldown: Job selection is on cooldown. You can select again in {time}.
+    abilities_click: "Kliknutím zobrazíš schopnosti {skill}"
+    job: Práce
+    job_desc: Zvolení {skill} jako tvé práce ti umožní vydělávat peníze během získávání XP.
+    job_select: Levým kliknutím zvolíš {skill} jako svou práci
+    job_active: Tuto práci aktivně vykonáváš
+    job_quit: Pravým kliknutím opustíš tuto práci
+    job_limit: Dosáhl jsi limitu prací. Nejprve opusť aktivní práci, abys mohl zvolit tuto.
+    job_cooldown: Výběr práce má odpočet. Znovu si můžeš vybrat za {time}.
   stats:
     stats_title: Tvé statistiky
     skills: "Dovednosti"
@@ -772,15 +772,15 @@ menus:
     alphabetical: "Jméno (A-Z)"
     reverse_alphabetical: "Jméno (Z-A)"
     sort_click: "Klikni pro změnu řazení"
-    multiplied_xp: "Výsledné XP"
-    multiplied_desc: "XP, které skutečně získáš (včetně násobičů)."
+    multiplied_xp: "Vynásobené {xp_unit}"
+    multiplied_desc: "Toto jsou XP, které skutečně získáš na základě tvých aktuálních násobičů XP"
   abilities:
     abilities_title: "{skill} Schopnosti"
     description: "Popis"
     unlocked_at: "<1>Odemčeno na <2>{skill} {level}"
     next_upgrade_at: "<1>Další vylepšení na <2>{skill} {level}"
   stat_info:
-    stat_details: "{stat_name} Stat"
+    stat_details: "Statistika {stat_name}"
     stat: "Stat"
     stat_level: "Stat Level"
     traits_leveled: "Traits Leveled"
