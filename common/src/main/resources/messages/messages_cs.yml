@@ -105,7 +105,7 @@ abilities:
     info: "+{value}% Epická kořist"
   retrieval:
     name: Návrat
-    desc: "Šípy, které minou cíl, se okamžitě vrátí po {time}s (až do vzdálenosti {value} bloků)."
+    desc: "Šípy, které minou cíl, se okamžitě vrátí po {time}s, až do vzdálenosti {value} bloků."
     info: "{value} Dosah návratu"
   archer:
     name: Střelec
@@ -121,7 +121,7 @@ abilities:
     info: "{value}% Šance na Proražení"
   stun:
     name: Omráčení
-    desc: "{value}% šance na snížení rychlosti nepřítele o 20% na 2 sekundy."
+    desc: "{value}% šance snížit rychlost pohybu nepřítele o {reduction_percent}% na 2 sekundy."
     info: "{value}% Šance na Omráčení"
   shielding:
     name: Zaštítění
@@ -147,7 +147,7 @@ abilities:
     name: Vykrytí
     desc: "Pokud mineš úder mečem {time}s před zásahem, snížíš poškození o {value}% a zrušíš odhození."
     info: "{value}% Redukce poškození"
-    parried: "<red>Útok vykryt!"
+    parried: "<red>Útok vykryt"
   fighter:
     name: Bojovník
     desc: "Získej o {value}% více XP k bojování"
@@ -330,38 +330,38 @@ acf:
 commands:
   prefix: "<dark_gray>[<aqua>Dovednosti<dark_gray>]<reset> "
   antiafk:
-    failed: "<red>{player} failed anti-AFK check {check} <gray>(Count: {count})"
+    failed: "<red>{player} neprošel anti-AFK kontrolou {check} <gray>(Počet: {count})"
     logs:
-      header: "<gray>Anti-AFK logs for <red>{player} <gray>({count} total) <dark_gray>| <gray>Page {page}/{total_pages}:"
+      header: "<gray>Anti-AFK logy pro <red>{player} <gray>({count} celkem) <dark_gray>| <gray>Strana {page}/{total_pages}:"
       entry: "<gray>{timestamp} - {message}"
-      desc: Show anti-AFK logs for a given player.
+      desc: Zobrazí anti-AFK logy pro daného hráče.
   armor:
     modifier:
       add:
-        added: "{color}{stat} <gray>modifikátor (úroveň <aqua>{value}<gray>) byl přidán na tvůj předmět."
+        added: "Na brnění byl přidán modifikátor statistiky: {stat}, hodnota: {value}, operace: {operation}"
         already_exists: "<yellow>Modifikátor brnění se staty {color}{stat} &již existuje na tvém brnění! Odstraníš to pomocí with /sk armor modifier remove"
-        desc: Adds an armor stat modifier to the item held, along with lore by default.
+        desc: Přidá modifikátor statistik brnění na držený předmět, včetně výchozího lore.
       remove:
         does_not_exist: "<yellow>Tvůj item nemá a {color}{stat} <yellow>modifikátorů!"
         removed: "{color}{stat} <gray>modifikátor byl z tvého itemů odstraněn"
-        desc: Removes an armor stat modifier from the item held, and the lore associated with it by default.
+        desc: Odstraní modifikátor statistik brnění z drženého předmětu a ve výchozím nastavení i související lore.
       list:
         header: "<white>Nalezené modifikátory brnění:"
-        desc: Lists all armor stat modifiers on the item held.
+        desc: Vypíše všechny modifikátory statistik brnění na drženém předmětu.
       removeall:
         removed: "<gray>Z tvého itemů byly odstraněny všechny modifikátory brnění"
-        desc: Removes all armor stat modifiers from the item held.
+        desc: Odstraní všechny modifikátory statistik brnění z drženého předmětu.
     trait:
       add:
-        added: "Added trait modifier to armor with trait: {trait}, value: {value}, operation: {operation}"
-        already_exists: "<yellow>An armor modifier with trait {trait} <yellow>already exists on your item! Remove it first with /sk armor trait remove"
-        desc: Adds an armor trait modifier to the item held, along with lore by default.
+        added: "Na brnění byl přidán modifikátor vlastnosti: {trait}, hodnota: {value}, operace: {operation}"
+        already_exists: "<yellow>Modifikátor brnění s vlastností {trait} <yellow>již na tvém předmětu existuje! Nejprve ho odstraň pomocí /sk armor trait remove"
+        desc: Přidá modifikátor vlastnosti brnění na držený předmět, včetně výchozího lore.
       remove:
-        desc: Removes an armor trait modifier from the item held.
+        desc: Odstraní modifikátor vlastnosti brnění z drženého předmětu.
       list:
-        desc: Lists all item trait modifiers on the item held.
+        desc: Vypíše všechny modifikátory vlastností na drženém předmětu.
       removeall:
-        desc: Removes all armor trait modifiers from the item held.
+        desc: Odstraní všechny modifikátory vlastností brnění z drženého předmětu.
     multiplier:
       add:
         added: "<aqua>{target} <gray>multiplikátor s hodnotou <aqua>{value} <gray>byl přidán na tvůj item"
@@ -370,33 +370,33 @@ commands:
         skill_lore_subtract: "<gray>Při nošení: <aqua>-{value}% {skill} XP"
         global_lore: "<gray>Při nošení: <blue>+{value}% Dovednostni XP"
         global_lore_subtract: "<gray>Při nošení: <blue>-{value}% Dovednostni XP"
-        desc: Adds an armor multiplier to the held item for all or a specific skill where value is the percentage more XP gained.
+        desc: Přidá násobič brnění na držený předmět pro všechny nebo konkrétní dovednost, kde hodnota určuje procentuální nárůst XP.
       remove:
         does_not_exist: "<yellow>Tvůj item nemá a <aqua>{target} <yellow>armor multiplikátor!"
         removed: "<aqua>{target} <gray>multiplikátor brnění byl z tvého předmětu odstraněn"
-        desc: Removes an armor multiplier of the specified skill or a global multiplier from the held item.
+        desc: Odstraní násobič brnění pro zadanou dovednost nebo globální násobič z drženého předmětu.
       list:
         header: "<white>Nalezené multiplikátory brnění:"
-        desc: Lists all armor multipliers on the held item.
+        desc: Vypíše všechny násobiče brnění na drženém předmětu.
       removeall:
         removed: "<gray>Z tvého předmětu byly odstraněny všechny multiplikátory brnění"
-        desc: Removes all armor multipliers from the item held.
+        desc: Odstraní všechny násobiče brnění z drženého předmětu.
     requirement:
       add:
         added: "<dark_aqua>{skill}<gray> požádavek na brnění s úrovni <aqua>{level}<gray> byl přidán na tvůj item"
         already_exists: "<yellow>Item už má požádavek na <dark_aqua>{skill}<yellow> požadovanou zbroj! Nejprv ji odstraníš pomocí with <gold>/sk armor requirement remove"
         lore: "<red>Vyžaduje <dark_aqua>{skill} {level}"
-        desc: Adds an armor requirement to the item held, along with lore by default.
+        desc: Přidá požadavek na brnění na držený předmět, včetně výchozího lore.
       remove:
         does_not_exist: "<yellow>Tvůj Item <dark_aqua>{skill}<yellow> nemá požádovanou zbroj!"
         removed: "<dark_aqua>{skill}<gray> Z tvého předmětu byl odstraněn požadavek na brnění"
-        desc: Removes an armor requirement from the item held, along with the lore associated it by default.
+        desc: Odstraní požadavek na brnění z drženého předmětu a ve výchozím nastavení i související lore.
       list:
         header: "<white>Nalezené požadavky na zbroj:"
-        desc: Lists the armor requirements on the item held.
+        desc: Vypíše požadavky na brnění na drženém předmětu.
       removeall:
         removed: "<gray>Z tvého předmětu byly odstraněny všechny požadavky na brnění"
-        desc: Removes all armor requirements from the item held.
+        desc: Odstraní všechny požadavky na brnění z drženého předmětu.
       equip: "<yellow>Nesplňuješ požadavky na vybavení tohoto itemu: {requirements}"
   backup:
     load:
@@ -406,46 +406,46 @@ commands:
       error: "<red>Chyba při načtení zálohy: {error}"
       must_be_yaml: "<yellow>Soubor musí být pouze .yml souboru!"
       file_not_found: "<yellow>Záloha tohoto názvu souboru ve složce záloh neexistuje!"
-      desc: Loads a backup from a given file.
+      desc: Načte zálohu z daného souboru.
     save:
       saving: "<white>Úkládání zálohy..."
       saved: "<white>Zaláhovaný {type} data jako {file}"
       error: "<red>Chyba při zálohování {type} dat! Podrobnosti viz chyba v konzole/níže"
-      desc: Saves a backup of the current data to the backups folder.
+      desc: Uloží zálohu aktuálních dat do složky záloh.
   claimitems:
-    desc: Opens the menu to claim unclaimed items.
+    desc: Otevře menu pro vyzvednutí nevyzvednutých předmětů.
     no_items: "<yellow>Nemáš žádný item k reklamaci"
   item:
     give:
       sender: "<white>Daroval <aqua>{amount}x {key} <white>pro{player}"
       receiver: "<white>ylo ti dáno<aqua>{amount}x {key}"
-      desc: Gives an item with a key from the item registry to a player.
+      desc: Dá hráči předmět s klíčem z registru předmětů.
     modifier:
       add:
-        added: "{color}{stat} <gray>modifikátor (úroveň <aqua>{value}<gray>) byl přidán na předmět."
-        already_exists: "<yellow>Tento modifikátor již existuje! Odstraň ho pomocí /sk item modifier remove"
-        desc: Adds an item stat modifier to the item held, along with lore by default.
+        added: "Na předmět byl přidán modifikátor statistiky: {stat}, hodnota: {value}, operace: {operation}"
+        already_exists: "<yellow>Modifikátor předmětu se statistikou {color}{stat} <yellow>již na tvém předmětu existuje! Nejprve ho odstraň pomocí /sk item modifier remove"
+        desc: Přidá modifikátor statistik na držený předmět, včetně výchozího lore.
       remove:
         does_not_exist: "&Tvůj item nemá {color}{stat} <yellow>modifikátor!"
         removed: "{color}{stat} <gray>modifikátor byl z tvého itemu odstraněn"
-        desc: Removes an item stat modifier from the item held, and the lore associated with it by default.
+        desc: Odstraní modifikátor statistik předmětu z drženého předmětu a ve výchozím nastavení i související lore.
       list:
         header: "<white>Nalezená modifikace pro item:"
-        desc: Lists all item stat modifiers on the item held.
+        desc: Vypíše všechny modifikátory statistik na drženém předmětu.
       removeall:
         removed: "<gray>Z tvého itemu byly odstraněny všechny modifikace na itemu"
-        desc: Removes all item stat modifiers from the item held.
+        desc: Odstraní všechny modifikátory statistik z drženého předmětu.
     trait:
       add:
-        added: "Added trait modifier to item with trait: {trait}, value: {value}, operation: {operation}"
-        already_exists: "<yellow>An item modifier with trait {trait} <yellow>already exists on your item! Remove it first with /sk item trait remove"
-        desc: Adds an item trait modifier to the item held, along with lore by default.
+        added: "Na předmět byl přidán modifikátor vlastnosti: {trait}, hodnota: {value}, operace: {operation}"
+        already_exists: "<yellow>Modifikátor předmětu s vlastností {trait} <yellow>již na tvém předmětu existuje! Nejprve ho odstraň pomocí /sk item trait remove"
+        desc: Přidá modifikátor vlastnosti předmětu na držený předmět, včetně výchozího lore.
       remove:
-        desc: Removes an item trait modifier from the item held.
+        desc: Odstraní modifikátor vlastnosti předmětu z drženého předmětu.
       list:
-        desc: Lists all item trait modifiers on the item held.
+        desc: Vypíše všechny modifikátory vlastností na drženém předmětu.
       removeall:
-        desc: Removes all item trait modifiers from the item held.
+        desc: Odstraní všechny modifikátory vlastností z drženého předmětu.
     multiplier:
       add:
         added: "<aqua>{target} <gray>multiplikátor s hodnotou <aqua>{value} <aqua>yl přidán k tvému itemu"
@@ -454,46 +454,46 @@ commands:
         skill_lore_subtract: "<gray>Při držení: <aqua>-{value}% {skill} XP"
         global_lore: "<gray>Při držení: <blue>+{value}% Dovednostní XP"
         global_lore_subtract: "<gray>Při držení: <blue>-{value}% Dovednostní XP"
-        desc: Adds an item multiplier to the held item for all or a specific skill where value is the percentage more XP gained.
+        desc: Přidá násobič předmětu na držený předmět pro všechny nebo konkrétní dovednost, kde hodnota určuje procentuální nárůst získaných XP.
       remove:
         does_not_exist: "<yellow>Tvůj item nemá a <aqua>{target} <yellow>multiplikátor itemů!"
         removed: "<aqua>{target} <gray>multiplikátor itemů byl z tvého itemů byl odstraněn"
-        desc: Removes an item multiplier of the specified skill or a global multiplier from the held item.
+        desc: Odstraní násobič předmětu pro zadanou dovednost nebo globální násobič z drženého předmětu.
       list:
         header: "<white>Nalezené multiplikátory pro itemy:"
-        desc: Lists all item multipliers on the held item.
+        desc: Vypíše všechny násobiče předmětu na drženém předmětu.
       removeall:
         removed: "<gray>Všechny multiplikátory položek byly z tvého itemů odstraněny"
-        desc: Removes all item multipliers from the item held.
+        desc: Odstraní všechny násobiče předmětu z drženého předmětu.
     register:
       registered: "<white>Registrovaní držení itemů na klíč {key}"
       already_registered: "<yellow>Ke klíči již byl zaregistrován item<white>{key}<yellow>, Použij <white>/skills item unregister <yellow>pro odregistrovani prvně"
       no_spaces: "<yellow>Klíč itemů nesmí obsahovat mezery!"
-      desc: Registers an item to the item registry with a given key which can be referenced in plugin configuration.
+      desc: Zaregistruje předmět do registru předmětů s daným klíčem, na který lze odkazovat v konfiguraci pluginu.
     requirement:
       add:
         added: "<dark_aqua>{skill}<gray> požadavek na item s úrovní <aqua>{level}<gray> byl přidán na tvůj item"
         already_exists: "<yellow>Item již má a <dark_aqua>{skill}<yellow> item požádavek! Nejprv odstraň pomocí příkazu pomocí <gold>/sk item requirement remove"
         lore: "<red>Vyžaduje <dark_aqua>{skill} {level}"
-        desc: Adds an item requirement to the item held, along with lore by default.
+        desc: Přidá požadavek na předmět na držený předmět, včetně výchozího lore.
       remove:
         does_not_exist: "<yellow>Tvůj item nemá <dark_aqua>{skill}<yellow> item požádavek!"
         removed: "<dark_aqua>{skill}<gray> požadavek na položku byl z tvoji položky odstraněn"
-        desc: Removes an item requirement from the item held, and the lore associated with it by default.
+        desc: Odstraní požadavek na předmět z drženého předmětu a ve výchozím nastavení i související lore.
       list:
         header: "<white>Nalezené požadavky na položku:"
-        desc: Lists the item requirements on the item held.
+        desc: Vypíše požadavky na předmět na drženém předmětu.
       removeall:
         removed: "<gray>Z tvoji položky byly odstraněny všechny požadavky na položku"
-        desc: Removes all item requirements from the item held.
+        desc: Odstraní všechny požadavky na předmět z drženého předmětu.
       use: "<yellow>Nesplňuješ požadavky pro použití této položky: {requirements}"
     unregister:
       unregistered: "<white>Neregistrovaná položka s klíčem {key}"
       not_registered: "<yellow>S klíčem není registrována žádná položka {key}"
-      desc: Unregisters an item from the item registry with the given key
+      desc: Odregistruje předmět z registru předmětů s daným klíčem
     ignore:
       add:
-        added: "<gray>Your item will now be ignored by mana ability interactions"
+        added: "<gray>Tvůj předmět bude nyní ignorován interakcemi manových schopností"
         desc: Adds the tag that ignores the held item from mana ability interactions.
       remove:
         removed: "<gray>Your item will no longer be ignored by mana ability interactions"
@@ -514,7 +514,7 @@ commands:
   lang:
     set: "<gray>Jazyk nastaven na <aqua>{lang}"
     not_found: "<yellow>Jazyk nenalezen!"
-    desc: Changes your player language.
+    desc: Změní tvůj jazyk.
   mana:
     display: "<white>Tvoje {mana_unit}: <aqua>{current}/{max}"
     display_other: "<white>{mana_unit} of {player}: <aqua>{current}/{max}"
