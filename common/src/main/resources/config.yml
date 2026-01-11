@@ -175,6 +175,7 @@ damage_holograms:
     critical:
       digits: [ white, yellow, gold, red, dark_red, dark_purple, light_purple, blue, dark_blue ]
 leaderboards:
+  enabled: true
   update_period: 6000
   update_delay: 6000
 start_level: 0
