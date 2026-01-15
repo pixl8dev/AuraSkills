@@ -37,3 +37,6 @@ build.xml
 bukkit/run/
 
 htmlReport/
+/bukkit
+/common
+.DS_Store
