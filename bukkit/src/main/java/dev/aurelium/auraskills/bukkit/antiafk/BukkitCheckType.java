@@ -12,7 +12,8 @@ public enum BukkitCheckType implements CheckType {
     ENTITY_A(EntityA.class),
     ENTITY_B(EntityB.class),
     ENTITY_C(EntityC.class),
-    FISHING_A(FishingA.class);
+    FISHING_A(FishingA.class),
+    MOVE_A(MoveA.class);
 
     private final Class<? extends BukkitCheck> checkClass;
 

@@ -151,6 +151,11 @@ anti_afk:
     fishing_a:
       enabled: true
       min_count: 10
+    move_a:
+      enabled: true
+      max_distance: 0.5
+      min_count: 10
+      idle_time_ms: 60000
 enable_roman_numerals: false
 damage_holograms:
   enabled: true

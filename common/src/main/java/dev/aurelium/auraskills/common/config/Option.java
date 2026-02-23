@@ -83,6 +83,10 @@ public enum Option {
     ANTI_AFK_CHECKS_ENTITY_C_MIN_COUNT("anti_afk.checks.entity_c.min_count", OptionType.INT),
     ANTI_AFK_CHECKS_FISHING_A_ENABLED("anti_afk.checks.fishing_a.enabled", OptionType.BOOLEAN),
     ANTI_AFK_CHECKS_FISHING_A_MIN_COUNT("anti_afk.checks.fishing_a.min_count", OptionType.INT),
+    ANTI_AFK_CHECKS_MOVE_A_ENABLED("anti_afk.checks.move_a.enabled", OptionType.BOOLEAN),
+    ANTI_AFK_CHECKS_MOVE_A_MAX_DISTANCE("anti_afk.checks.move_a.max_distance", OptionType.DOUBLE),
+    ANTI_AFK_CHECKS_MOVE_A_MIN_COUNT("anti_afk.checks.move_a.min_count", OptionType.INT),
+    ANTI_AFK_CHECKS_MOVE_A_IDLE_TIME_MS("anti_afk.checks.move_a.idle_time_ms", OptionType.INT),
     ENABLE_ROMAN_NUMERALS("enable_roman_numerals", OptionType.BOOLEAN),
     // Damage hologram options
     DAMAGE_HOLOGRAMS_ENABLED("damage_holograms.enabled", OptionType.BOOLEAN),
