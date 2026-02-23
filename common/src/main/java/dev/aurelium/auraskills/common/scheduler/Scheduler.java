@@ -43,14 +43,16 @@ public abstract class Scheduler {
         asyncScheduler.shutdown();
 
         try {
-            boolean asyncExecutorDone = asyncExecutor.awaitTermination(2, TimeUnit.SECONDS);
-            boolean asyncSchedulerDone = asyncScheduler.awaitTermination(2, TimeUnit.SECONDS);
-
-            if (!asyncExecutorDone || !asyncSchedulerDone) {
-                plugin.logger().warn("Scheduler had incomplete tasks when shutting down");
+            if (!asyncExecutor.awaitTermination(3, TimeUnit.SECONDS)) {
+                asyncExecutor.shutdownNow();
+            }
+            if (!asyncScheduler.awaitTermination(3, TimeUnit.SECONDS)) {
+                asyncScheduler.shutdownNow();
             }
         } catch (final InterruptedException e) {
-            e.printStackTrace();
+            asyncExecutor.shutdownNow();
+            asyncScheduler.shutdownNow();
+            Thread.currentThread().interrupt();
         }
     }
 
