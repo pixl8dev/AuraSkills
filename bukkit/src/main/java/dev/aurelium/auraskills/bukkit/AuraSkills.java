@@ -113,6 +113,11 @@ import org.spongepowered.configurate.ConfigurationNode;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Locale;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -120,6 +125,8 @@ import java.util.logging.Logger;
 import static dev.aurelium.auraskills.bukkit.ref.BukkitPlayerRef.unwrap;
 
 public class AuraSkills extends JavaPlugin implements AuraSkillsPlugin {
+
+    private static final long SHUTDOWN_BACKUP_TIMEOUT_SECONDS = 10;
 
     private AuraSkillsApi api;
     private AuraSkillsBukkit apiBukkit;
@@ -337,9 +344,11 @@ public class AuraSkills extends JavaPlugin implements AuraSkillsPlugin {
             regionManager.saveAllRegions(false, true);
             regionManager.clearRegionMap();
         }
-        leaderboardManager.getLeaderboardExclusion().saveToFile(); // Save excluded leaderboard players
+        if (leaderboardManager != null) {
+            leaderboardManager.getLeaderboardExclusion().saveToFile(); // Save excluded leaderboard players
+        }
         try {
-            backupAutomatically();
+            backupAutomaticallyWithTimeout();
         } catch (Exception e) {
             logger.warn("Error creating automatic backup");
             e.printStackTrace();
@@ -351,6 +360,35 @@ public class AuraSkills extends JavaPlugin implements AuraSkillsPlugin {
         if (itemRegistry != null) {
             itemRegistry.getStorage().save();
         }
+    }
+
+    private void backupAutomaticallyWithTimeout() throws Exception {
+        CompletableFuture<Void> backupFuture = CompletableFuture.runAsync(() -> {
+            try {
+                backupAutomatically();
+            } catch (Exception e) {
+                throw new CompletionException(e);
+            }
+        });
+        try {
+            backupFuture.get(SHUTDOWN_BACKUP_TIMEOUT_SECONDS, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            backupFuture.cancel(true);
+            logger.warn("Automatic backup timed out after " + SHUTDOWN_BACKUP_TIMEOUT_SECONDS + " seconds during shutdown");
+        } catch (ExecutionException e) {
+            throw unwrapBackupException(e);
+        }
+    }
+
+    private Exception unwrapBackupException(ExecutionException exception) {
+        Throwable cause = exception.getCause();
+        if (cause instanceof CompletionException completionException && completionException.getCause() != null) {
+            cause = completionException.getCause();
+        }
+        if (cause instanceof Exception ex) {
+            return ex;
+        }
+        return new RuntimeException(cause);
     }
 
     private void backupAutomatically() throws Exception {
