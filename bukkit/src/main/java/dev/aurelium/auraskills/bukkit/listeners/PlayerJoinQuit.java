@@ -56,6 +56,7 @@ public class PlayerJoinQuit implements Listener {
             return;
         }
         User user = plugin.getUser(player);
+        plugin.getUiProvider().getActionBarManager().resetActionBar(user);
 
         plugin.getScheduler().executeAsync(() -> {
             try {

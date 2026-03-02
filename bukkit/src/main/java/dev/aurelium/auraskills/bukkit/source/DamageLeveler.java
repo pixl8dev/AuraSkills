@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
 import java.util.Arrays;
@@ -198,6 +199,11 @@ public class DamageLeveler extends SourceLeveler {
             return livingEntity.getType().toString().equalsIgnoreCase(name);
         }
         return false;
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        lastGainTime.remove(event.getPlayer().getUniqueId());
     }
 
 }

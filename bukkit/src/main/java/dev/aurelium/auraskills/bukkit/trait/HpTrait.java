@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.jetbrains.annotations.Nullable;
 
@@ -263,6 +264,11 @@ public class HpTrait extends TraitImpl {
         } catch (Exception e) {
             plugin.logger().warn("There was an error loading health.hearts data! Check to make sure the keys are only integers and the values are only numbers.");
         }
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        worldChangeHealth.remove(event.getPlayer().getUniqueId());
     }
 
 }

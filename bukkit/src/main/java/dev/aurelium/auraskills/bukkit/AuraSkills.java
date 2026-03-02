@@ -347,6 +347,9 @@ public class AuraSkills extends JavaPlugin implements AuraSkillsPlugin {
         if (leaderboardManager != null) {
             leaderboardManager.getLeaderboardExclusion().saveToFile(); // Save excluded leaderboard players
         }
+        if (hookManager != null) {
+            hookManager.clearHooks();
+        }
         try {
             backupAutomaticallyWithTimeout();
         } catch (Exception e) {

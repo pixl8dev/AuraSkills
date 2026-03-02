@@ -66,4 +66,16 @@ public class HookManager {
         this.hooks.put(type, hook);
     }
 
+    public void clearHooks() {
+        for (Hook hook : hooks.values()) {
+            if (hook instanceof AutoCloseable closeable) {
+                try {
+                    closeable.close();
+                } catch (Exception ignored) {
+                }
+            }
+        }
+        hooks.clear();
+    }
+
 }

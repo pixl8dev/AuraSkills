@@ -19,7 +19,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.Inventory;
@@ -97,7 +99,8 @@ public class BrewingLeveler extends SourceLeveler {
         // Get the brewing stand data
         Location location = inventory.getLocation();
         if (location == null) return;
-        BrewingStandData standData = brewingStands.get(BukkitBlock.from(location.getBlock()));
+        BlockPosition standPosition = BukkitBlock.from(location.getBlock());
+        BrewingStandData standData = brewingStands.get(standPosition);
         if (standData == null) return;
 
         if (!(event.getWhoClicked() instanceof Player player)) return;
@@ -113,6 +116,9 @@ public class BrewingLeveler extends SourceLeveler {
 
         brewingSlot.setBrewed(false); // Set data to false
         brewingSlot.resetIngredients();
+        if (standData.isEmpty()) {
+            brewingStands.remove(standPosition, standData);
+        }
 
         for (SkillSource<BrewingXpSource> skillSource : sources) {
             if (skillSource == null) return;
@@ -186,7 +192,26 @@ public class BrewingLeveler extends SourceLeveler {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBrewingStandBreak(BlockBreakEvent event) {
         if (disabled()) return;
-        Block block = event.getBlock();
+        cleanupBrewingStand(event.getBlock());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onBlockExplode(BlockExplodeEvent event) {
+        if (disabled()) return;
+        for (Block block : event.blockList()) {
+            cleanupBrewingStand(block);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onEntityExplode(EntityExplodeEvent event) {
+        if (disabled()) return;
+        for (Block block : event.blockList()) {
+            cleanupBrewingStand(block);
+        }
+    }
+
+    private void cleanupBrewingStand(Block block) {
         if (block.getType() != Material.BREWING_STAND) {
             return;
         }
@@ -240,6 +265,18 @@ public class BrewingLeveler extends SourceLeveler {
 
         public BrewingSlot getSlot(int slot) {
             return slots.computeIfAbsent(slot, s -> new BrewingSlot());
+        }
+
+        public boolean isEmpty() {
+            if (slots.isEmpty()) {
+                return true;
+            }
+            for (BrewingSlot slot : slots.values()) {
+                if (slot.isBrewed() || !slot.getIngredients().isEmpty()) {
+                    return false;
+                }
+            }
+            return true;
         }
 
     }

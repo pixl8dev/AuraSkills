@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 
@@ -77,6 +78,13 @@ public class JumpingLeveler extends SourceLeveler {
         } else {
             player.setMetadata("skillsJumps", new FixedMetadataValue(plugin, 1));
         }
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        prevPlayersOnGround.remove(player.getUniqueId());
+        player.removeMetadata("skillsJumps", plugin);
     }
 
 }

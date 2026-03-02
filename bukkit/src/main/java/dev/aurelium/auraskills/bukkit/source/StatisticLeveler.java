@@ -11,6 +11,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.Locale;
 import java.util.Map;
@@ -71,6 +73,11 @@ public class StatisticLeveler extends SourceLeveler {
             } catch (IllegalArgumentException ignored) {
             }
         }
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        tracker.remove(event.getPlayer().getUniqueId());
     }
 
 }

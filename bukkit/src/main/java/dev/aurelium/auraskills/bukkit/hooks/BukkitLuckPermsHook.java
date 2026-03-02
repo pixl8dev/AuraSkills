@@ -3,6 +3,7 @@ package dev.aurelium.auraskills.bukkit.hooks;
 import dev.aurelium.auraskills.common.AuraSkillsPlugin;
 import dev.aurelium.auraskills.common.hooks.Hook;
 import dev.aurelium.auraskills.common.hooks.LuckPermsHook;
+import net.luckperms.api.event.EventSubscription;
 import net.luckperms.api.event.node.NodeAddEvent;
 import net.luckperms.api.event.node.NodeRemoveEvent;
 import net.luckperms.api.model.PermissionHolder;
@@ -28,11 +29,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class BukkitLuckPermsHook extends LuckPermsHook implements Listener {
+public class BukkitLuckPermsHook extends LuckPermsHook implements Listener, AutoCloseable {
 
     private final String prefix = "auraskills.multiplier.";
     private final Map<UUID, Set<String>> permissionCache = new ConcurrentHashMap<>();
     private final boolean usePermissionCache;
+    private EventSubscription<NodeAddEvent> nodeAddSubscription;
+    private EventSubscription<NodeRemoveEvent> nodeRemoveSubscription;
 
     public BukkitLuckPermsHook(AuraSkillsPlugin plugin, ConfigurationNode config) {
         super(plugin, config);
@@ -41,10 +44,10 @@ public class BukkitLuckPermsHook extends LuckPermsHook implements Listener {
 
         if (!this.usePermissionCache) return;
 
-        luckPerms.getEventBus().subscribe(NodeAddEvent.class,
+        nodeAddSubscription = luckPerms.getEventBus().subscribe(this, NodeAddEvent.class,
                 event -> handleEvent(event.getNode(), event.getTarget()));
 
-        luckPerms.getEventBus().subscribe(NodeRemoveEvent.class,
+        nodeRemoveSubscription = luckPerms.getEventBus().subscribe(this, NodeRemoveEvent.class,
                 event -> handleEvent(event.getNode(), event.getTarget()));
     }
 
@@ -138,6 +141,19 @@ public class BukkitLuckPermsHook extends LuckPermsHook implements Listener {
     @Override
     public Class<? extends Hook> getTypeClass() {
         return BukkitLuckPermsHook.class;
+    }
+
+    @Override
+    public void close() {
+        if (nodeAddSubscription != null) {
+            nodeAddSubscription.close();
+            nodeAddSubscription = null;
+        }
+        if (nodeRemoveSubscription != null) {
+            nodeRemoveSubscription.close();
+            nodeRemoveSubscription = null;
+        }
+        permissionCache.clear();
     }
 
 }
