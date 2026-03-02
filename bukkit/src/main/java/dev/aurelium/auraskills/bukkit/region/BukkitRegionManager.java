@@ -103,7 +103,6 @@ public class BukkitRegionManager extends RegionManager {
     public void removePlacedBlock(Block block) {
         Region region = getRegionFromBlock(block);
         if (region != null) {
-            RegionCoordinate regionCoordinate = new RegionCoordinate(region.getWorldName(), region.getX(), region.getZ());
             byte regionChunkX = (byte) (block.getChunk().getX() - region.getX() * 32);
             byte regionChunkZ = (byte) (block.getChunk().getZ() - region.getZ() * 32);
             ChunkCoordinate chunkCoordinate = new ChunkCoordinate(regionChunkX, regionChunkZ);
@@ -112,9 +111,6 @@ public class BukkitRegionManager extends RegionManager {
                 chunkData.removePlacedBlock(new BlockPosition(block.getX(), block.getY(), block.getZ()));
                 if (chunkData.getPlacedBlocks().isEmpty()) {
                     region.removeChunkData(chunkCoordinate, chunkData);
-                    if (region.getChunkMap().isEmpty()) {
-                        regions.remove(regionCoordinate, region);
-                    }
                 }
             }
         }

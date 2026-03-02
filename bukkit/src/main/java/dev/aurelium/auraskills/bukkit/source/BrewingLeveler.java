@@ -187,13 +187,13 @@ public class BrewingLeveler extends SourceLeveler {
     public void onBrewingStandBreak(BlockBreakEvent event) {
         if (disabled()) return;
         Block block = event.getBlock();
-        if (block.getType().equals(Material.BREWING_STAND)) {
+        if (block.getType() != Material.BREWING_STAND) {
             return;
         }
-        if (event.getBlock().hasMetadata("skillsBrewingStandOwner")) {
-            event.getBlock().removeMetadata("skillsBrewingStandOwner", plugin);
+        if (block.hasMetadata("skillsBrewingStandOwner")) {
+            block.removeMetadata("skillsBrewingStandOwner", plugin);
         }
-        brewingStands.remove(BukkitBlock.from(event.getBlock()));
+        brewingStands.remove(BukkitBlock.from(block));
     }
 
     // Marks brewing stand as owned by player when opened if unclaimed
