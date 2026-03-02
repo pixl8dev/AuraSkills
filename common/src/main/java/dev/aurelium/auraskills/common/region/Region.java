@@ -45,6 +45,10 @@ public class Region {
         chunks.put(chunkCoordinate, chunkData);
     }
 
+    public void removeChunkData(ChunkCoordinate chunkCoordinate, ChunkData chunkData) {
+        chunks.remove(chunkCoordinate, chunkData);
+    }
+
     public Map<ChunkCoordinate, ChunkData> getChunkMap() {
         return chunks;
     }
