@@ -27,12 +27,14 @@ public abstract class ActionBarManager {
     private final Set<UUID> isGainingXp = Sets.newConcurrentHashSet();
     private final Map<UUID, Integer> timer = new ConcurrentHashMap<>();
     private final Map<UUID, Integer> currentAction = new ConcurrentHashMap<>();
+    private final Map<UUID, XpActionBarData> xpActionBars = new ConcurrentHashMap<>();
     private final Map<Locale, String> idleMessageCache = new ConcurrentHashMap<>();
 
     public ActionBarManager(AuraSkillsPlugin plugin, UiProvider uiProvider) {
         this.plugin = plugin;
         this.uiProvider = uiProvider;
         startTimerCountdown();
+        startUpdatingXpActionBar();
         startUpdatingIdleActionBar();
     }
 
@@ -49,7 +51,12 @@ public abstract class ActionBarManager {
                     Integer time = timer.get(uuid);
                     if (time != null) {
                         if (time > 0) {
-                            timer.put(uuid, time - 1);
+                            int decremented = time - 1;
+                            timer.put(uuid, decremented);
+                            if (decremented == 0) {
+                                isGainingXp.remove(uuid);
+                                xpActionBars.remove(uuid);
+                            }
                         }
                     } else {
                         timer.put(uuid, 0);
@@ -58,6 +65,38 @@ public abstract class ActionBarManager {
             }
         };
         plugin.getScheduler().timerSync(task, 0, 2 * 50L, TimeUnit.MILLISECONDS);
+    }
+
+    public void startUpdatingXpActionBar() {
+        var task = new TaskRunnable() {
+            @Override
+            public void run() {
+                if (!plugin.configBoolean(Option.ACTION_BAR_ENABLED)) {
+                    return;
+                }
+                for (User user : plugin.getUserManager().getOnlineUsers()) {
+                    UUID uuid = user.getUuid();
+                    if (!isGainingXp.contains(uuid) || isPaused.contains(uuid)) {
+                        continue;
+                    }
+
+                    XpActionBarData data = xpActionBars.get(uuid);
+                    if (data == null) {
+                        continue;
+                    }
+
+                    Integer actionNum = currentAction.get(uuid);
+                    if (actionNum == null || actionNum != data.action()) {
+                        continue;
+                    }
+
+                    String message = getXpActionBarMessage(user, data.skill(), data.currentXp(), data.levelXp(),
+                            data.xpGained(), data.level(), data.maxed(), data.income());
+                    uiProvider.sendActionBar(user, message);
+                }
+            }
+        };
+        plugin.getScheduler().timerSync(task, 0, plugin.configInt(Option.ACTION_BAR_UPDATE_PERIOD) * 50L, TimeUnit.MILLISECONDS);
     }
 
     public void startUpdatingIdleActionBar() {
@@ -146,45 +185,18 @@ public abstract class ActionBarManager {
         // Increment action number
         int thisAction = currentAction.getOrDefault(uuid, 0) + 1;
         currentAction.put(uuid, thisAction);
-        // Schedule timer task to update action bar
-        plugin.getScheduler().timerSync(
-                new TaskRunnable() {
-                    @Override
-                    public void run() {
-                        if (!isGainingXp.contains(uuid)) {
-                            cancel();
-                            return;
-                        }
-                        // Cancel if a later action bar is sent
-                        Integer actionNum = currentAction.get(uuid);
-                        if (actionNum == null) {
-                            cancel();
-                            return;
-                        }
-                        if (thisAction != actionNum) {
-                            cancel();
-                            return;
-                        }
+        xpActionBars.put(uuid, new XpActionBarData(skill, currentXp, levelXp, xpGained, level, maxed, income, thisAction));
 
-                        String message = getXpActionBarMessage(user, skill, currentXp, levelXp, xpGained, level, maxed, income);
-                        uiProvider.sendActionBar(user, message);
-                    }
-                }, 0, plugin.configInt(Option.ACTION_BAR_UPDATE_PERIOD) * 50L, TimeUnit.MILLISECONDS);
-        // Schedule task to stop updating action bar
-        plugin.getScheduler().scheduleSync(() -> {
-            Integer timerNum = timer.get(uuid);
-            if (timerNum != null) {
-                if (timerNum.equals(0)) {
-                    isGainingXp.remove(uuid);
-                }
-            }
-        }, 41 * 50L, TimeUnit.MILLISECONDS);
+        // Send immediately once, then let the shared updater handle periodic refreshes.
+        String message = getXpActionBarMessage(user, skill, currentXp, levelXp, xpGained, level, maxed, income);
+        uiProvider.sendActionBar(user, message);
     }
 
     public void resetActionBars() {
         isGainingXp.clear();
         timer.clear();
         currentAction.clear();
+        xpActionBars.clear();
         isPaused.clear();
         clearMessageCache();
     }
@@ -194,6 +206,7 @@ public abstract class ActionBarManager {
         isGainingXp.remove(uuid);
         timer.remove(uuid);
         currentAction.remove(uuid);
+        xpActionBars.remove(uuid);
         isPaused.remove(uuid);
     }
 
@@ -307,5 +320,16 @@ public abstract class ActionBarManager {
     public void clearMessageCache() {
         idleMessageCache.clear();
     }
+
+    private record XpActionBarData(
+            Skill skill,
+            double currentXp,
+            double levelXp,
+            double xpGained,
+            int level,
+            boolean maxed,
+            double income,
+            int action
+    ) {}
 
 }
