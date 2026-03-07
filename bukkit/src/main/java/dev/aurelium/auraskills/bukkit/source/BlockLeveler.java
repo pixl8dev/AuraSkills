@@ -24,7 +24,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.MetadataValue;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -187,34 +186,19 @@ public class BlockLeveler extends SourceLeveler {
             return true;
         }
 
-        for (String metaKey : List.of("filledManually")) {
-            List<MetadataValue> metaDataList = block.getMetadata(metaKey);
-            if (!metaDataList.isEmpty()) {
-                MetadataValue metaDataValue = metaDataList.getFirst();
-                if (metaDataValue.asBoolean()) {
-                    // Only remove the filledManually tag if levelled is empty
-                    if (emptyLeveler) {
-                        block.removeMetadata(metaKey, plugin);
-                    }
-                    return true;
-                }
+        if (plugin.getTemporaryBlockStateTracker().isFilledManually(block)) {
+            // Only remove the flag once the cauldron has been emptied.
+            if (emptyLeveler) {
+                plugin.getTemporaryBlockStateTracker().clearFilledManually(block);
             }
+            return true;
         }
 
         return false;
     }
 
     private boolean isFertilized(Block block) {
-        String key = "fertilized";
-        List<MetadataValue> metaDataList = block.getMetadata(key);
-        if (!metaDataList.isEmpty()) {
-            MetadataValue metaDataValue = metaDataList.getFirst();
-            if (metaDataValue.asBoolean()) {
-                block.removeMetadata(key, plugin);
-                return true;
-            }
-        }
-        return false;
+        return plugin.getTemporaryBlockStateTracker().consumeFertilized(block);
     }
 
     private void applyBlockLuck(Skill skill, Player player, User user, Block block, XpSource source) {
