@@ -11,7 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFertilizeEvent;
 import org.bukkit.event.block.CauldronLevelChangeEvent;
 import org.bukkit.event.block.CauldronLevelChangeEvent.ChangeReason;
-import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.Set;
 
@@ -37,7 +36,7 @@ public class BlockInteractions implements Listener {
         if (source.allowBoneMeal()) { // Don't mark if bone meal should give XP
             return;
         }
-        block.setMetadata("fertilized", new FixedMetadataValue(plugin, true));
+        plugin.getTemporaryBlockStateTracker().markFertilized(block);
     }
 
     @EventHandler
@@ -45,7 +44,7 @@ public class BlockInteractions implements Listener {
         CauldronLevelChangeEvent.ChangeReason reason = event.getReason();
         if (cauldronLevelChangeReasons.contains(reason)) {
             Block cauldron = event.getBlock();
-            cauldron.setMetadata("filledManually", new FixedMetadataValue(plugin, true));
+            plugin.getTemporaryBlockStateTracker().markFilledManually(cauldron);
         }
     }
 

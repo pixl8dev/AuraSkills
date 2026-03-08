@@ -3,6 +3,7 @@ package dev.aurelium.auraskills.bukkit.loot.entity;
 import dev.aurelium.auraskills.bukkit.AuraSkills;
 import dev.aurelium.auraskills.bukkit.util.AttributeCompat;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
@@ -11,11 +12,13 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Map.Entry;
 
 public class VanillaEntitySupplier extends EntitySupplier {
+
+    public static final String LEVEL_KEY = "auraskills_level";
 
     public VanillaEntitySupplier(EntityProperties entityProperties) {
         super(entityProperties);
@@ -61,7 +64,7 @@ public class VanillaEntitySupplier extends EntitySupplier {
         }
 
         if (properties.level() != null) {
-            entity.setMetadata("auraskills_level", new FixedMetadataValue(plugin, getEntityProperties().level()));
+            entity.getPersistentDataContainer().set(new NamespacedKey(plugin, LEVEL_KEY), PersistentDataType.INTEGER, getEntityProperties().level());
         }
 
         return entity;

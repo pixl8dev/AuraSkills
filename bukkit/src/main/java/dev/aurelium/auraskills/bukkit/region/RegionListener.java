@@ -8,6 +8,7 @@ import org.bukkit.Chunk;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 import java.util.concurrent.TimeUnit;
 
@@ -43,6 +44,16 @@ public class RegionListener implements Listener {
                 }
             });
         }
+    }
+
+    @EventHandler
+    public void onChunkUnload(ChunkUnloadEvent event) {
+        Chunk chunk = event.getChunk();
+        int regionX = (int) Math.floor((double) chunk.getX() / 32.0);
+        int regionZ = (int) Math.floor((double) chunk.getZ() / 32.0);
+        RegionCoordinate regionCoordinate = new RegionCoordinate(event.getWorld().getName(), regionX, regionZ);
+
+        plugin.getScheduler().scheduleAsync(() -> regionManager.saveAndClearIfUnused(regionCoordinate), 1, TimeUnit.SECONDS);
     }
 
     public void startSaveTimer() {

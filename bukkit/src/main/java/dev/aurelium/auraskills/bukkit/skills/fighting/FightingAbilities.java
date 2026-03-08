@@ -25,8 +25,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
@@ -38,6 +38,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class FightingAbilities extends BukkitAbilityImpl {
 
     public static final String BLEED_DAMAGER_KEY = "bleed_damager";
+    private static final String FIRST_STRIKE_COOLDOWN_UNTIL_KEY = "first_strike_cooldown_until";
     private final String parryKey = "parry_ready";
     private final String parryVector = "parry_vector";
 
@@ -74,38 +75,32 @@ public class FightingAbilities extends BukkitAbilityImpl {
 
         if (isDisabled(ability) || failsChecks(player, ability)) return DamageModifier.none();
 
-        // Player is on cooldown
-        if (player.hasMetadata("AureliumSkills-FirstStrike")) return DamageModifier.none();
-
         if (user.getAbilityLevel(ability) <= 0) return DamageModifier.none();
+
+        if (isFirstStrikeOnCooldown(user)) return DamageModifier.none();
 
         Locale locale = user.getLocale();
 
         if (ability.optionBoolean("enable_message", true)) {
             plugin.getAbilityManager().sendMessage(player, plugin.getMsg(AbilityMessage.FIRST_STRIKE_DEALT, locale));
         }
-        // Adds metadata
-        player.setMetadata("AureliumSkills-FirstStrike", new FixedMetadataValue(plugin, true));
-        // Increments counter
-        AbilityData abilityData = user.getAbilityData(ability);
-        if (abilityData.containsKey("counter")) {
-            abilityData.setData("counter", abilityData.getInt("counter") + 1);
-        } else {
-            abilityData.setData("counter", 0);
-        }
-        int id = abilityData.getInt("counter");
-        // Schedules metadata removal
         long cooldown = ability.optionInt("cooldown_ticks", 6000);
-        plugin.getScheduler().scheduleAtEntity(player, () -> {
-            if (user.getAbilityData(ability).containsKey("counter")) {
-                if (user.getAbilityData(ability).getInt("counter") == id) {
-                    player.removeMetadata("AureliumSkills-FirstStrike", plugin);
-                }
-            }
-        }, cooldown * 50, TimeUnit.MILLISECONDS);
+        user.getMetadata().put(FIRST_STRIKE_COOLDOWN_UNTIL_KEY, System.currentTimeMillis() + cooldown * 50L);
 
         double modifier = getValue(ability, user) / 100;
         return new DamageModifier(modifier, DamageModifier.Operation.ADD_COMBINED);
+    }
+
+    private boolean isFirstStrikeOnCooldown(User user) {
+        Object value = user.getMetadata().get(FIRST_STRIKE_COOLDOWN_UNTIL_KEY);
+        if (!(value instanceof Long cooldownUntil)) {
+            return false;
+        }
+        if (cooldownUntil <= System.currentTimeMillis()) {
+            user.getMetadata().remove(FIRST_STRIKE_COOLDOWN_UNTIL_KEY);
+            return false;
+        }
+        return true;
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -263,6 +258,17 @@ public class FightingAbilities extends BukkitAbilityImpl {
         NamespacedKey key = new NamespacedKey(plugin, "bleed_ticks");
         container.remove(key);
         container.remove(new NamespacedKey(plugin, BLEED_DAMAGER_KEY));
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        User user = plugin.getUserManager().getUser(event.getPlayer().getUniqueId());
+        if (user == null) {
+            return;
+        }
+        user.getMetadata().remove(FIRST_STRIKE_COOLDOWN_UNTIL_KEY);
+        user.getMetadata().remove(parryKey);
+        user.getMetadata().remove(parryVector);
     }
 
     @EventHandler

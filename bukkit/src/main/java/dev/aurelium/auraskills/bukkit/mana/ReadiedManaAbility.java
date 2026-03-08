@@ -24,6 +24,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public abstract class ReadiedManaAbility extends ManaAbilityProvider {
@@ -178,11 +179,21 @@ public abstract class ReadiedManaAbility extends ManaAbilityProvider {
 
     private void scheduleUnready(Player player, Locale locale, ManaAbilityData data) {
         int readyDuration = 80;
+        UUID uuid = player.getUniqueId();
         plugin.getScheduler().scheduleSync(() -> {
-            if (!data.isActivated()) {
-                if (data.isReady()) {
-                    data.setReady(false);
-                    plugin.getAbilityManager().sendMessage(player, plugin.getMsg(ManaAbilityMessage.valueOf(manaAbility.name() + "_LOWER"), locale));
+            if (!plugin.getUserManager().hasUser(uuid)) {
+                return;
+            }
+            User currentUser = plugin.getUserManager().getUser(uuid);
+            if (currentUser == null) {
+                return;
+            }
+            ManaAbilityData currentData = currentUser.getManaAbilityData(manaAbility);
+            if (!currentData.isActivated() && currentData.isReady()) {
+                currentData.setReady(false);
+                Player onlinePlayer = plugin.getServer().getPlayer(uuid);
+                if (onlinePlayer != null) {
+                    plugin.getAbilityManager().sendMessage(onlinePlayer, plugin.getMsg(ManaAbilityMessage.valueOf(manaAbility.name() + "_LOWER"), locale));
                 }
             }
         }, readyDuration * 50, TimeUnit.MILLISECONDS);

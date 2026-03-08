@@ -1,20 +1,20 @@
 package dev.aurelium.auraskills.common.region;
 
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class ChunkData {
 
     private final Region region;
     private final byte x;
     private final byte z;
-    private final ConcurrentMap<BlockPosition, BlockPosition> placedBlocks;
+    private final Set<BlockPosition> placedBlocks;
 
     public ChunkData(Region region, byte x, byte z) {
         this.region = region;
         this.x = x;
         this.z = z;
-        this.placedBlocks = new ConcurrentHashMap<>();
+        this.placedBlocks = ConcurrentHashMap.newKeySet();
     }
 
     public Region getRegion() {
@@ -30,15 +30,15 @@ public class ChunkData {
     }
 
     public boolean isPlacedBlock(BlockPosition blockPosition) {
-        return placedBlocks.containsKey(blockPosition);
+        return placedBlocks.contains(blockPosition);
     }
 
-    public ConcurrentMap<BlockPosition, BlockPosition> getPlacedBlocks() {
+    public Set<BlockPosition> getPlacedBlocks() {
         return placedBlocks;
     }
 
     public void addPlacedBlock(BlockPosition blockPosition) {
-        this.placedBlocks.put(blockPosition, blockPosition);
+        this.placedBlocks.add(blockPosition);
     }
 
     public void removePlacedBlock(BlockPosition blockPosition) {

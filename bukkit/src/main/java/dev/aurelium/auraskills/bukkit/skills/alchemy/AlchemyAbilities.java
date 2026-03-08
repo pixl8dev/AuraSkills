@@ -10,6 +10,7 @@ import dev.aurelium.auraskills.bukkit.AuraSkills;
 import dev.aurelium.auraskills.bukkit.ability.BukkitAbilityImpl;
 import dev.aurelium.auraskills.bukkit.item.BukkitPotionType;
 import dev.aurelium.auraskills.bukkit.skills.agility.AgilityAbilities;
+import dev.aurelium.auraskills.bukkit.source.BrewingLeveler;
 import dev.aurelium.auraskills.bukkit.util.AttributeCompat;
 import dev.aurelium.auraskills.bukkit.util.CompatUtil;
 import dev.aurelium.auraskills.bukkit.util.PotionUtil;
@@ -62,9 +63,11 @@ public class AlchemyAbilities extends BukkitAbilityImpl {
 
         if (event.isCancelled()) return;
 
-        if (!event.getBlock().hasMetadata("skillsBrewingStandOwner")) return;
+        BrewingLeveler brewingLeveler = plugin.getLevelManager().getLeveler(BrewingLeveler.class);
+        UUID ownerUuid = brewingLeveler.getBrewingStandOwner(event.getBlock());
+        if (ownerUuid == null) return;
 
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(event.getBlock().getMetadata("skillsBrewingStandOwner").get(0).asString()));
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(ownerUuid);
         if (!offlinePlayer.isOnline()) return;
 
         Player player = offlinePlayer.getPlayer();
