@@ -47,12 +47,8 @@ import dev.aurelium.auraskills.bukkit.region.RegionListener;
 import dev.aurelium.auraskills.bukkit.requirement.RequirementListener;
 import dev.aurelium.auraskills.bukkit.requirement.RequirementManager;
 import dev.aurelium.auraskills.bukkit.scheduler.BukkitScheduler;
-import dev.aurelium.auraskills.bukkit.skills.archery.ChargedShot;
-import dev.aurelium.auraskills.bukkit.source.BrewingLeveler;
-import dev.aurelium.auraskills.bukkit.source.JumpingLeveler;
 import dev.aurelium.auraskills.bukkit.stat.BukkitStatManager;
 import dev.aurelium.auraskills.bukkit.storage.BukkitStorageFactory;
-import dev.aurelium.auraskills.bukkit.tracking.TemporaryBlockStateTracker;
 import dev.aurelium.auraskills.bukkit.trait.BukkitTraitManager;
 import dev.aurelium.auraskills.bukkit.ui.BukkitUiProvider;
 import dev.aurelium.auraskills.bukkit.user.BukkitUser;
@@ -178,7 +174,6 @@ public class AuraSkills extends JavaPlugin implements AuraSkillsPlugin {
     private PresetManager presetManager;
     private PlatformUtil platformUtil;
     private BukkitAntiAfkManager antiAfkManager;
-    private TemporaryBlockStateTracker temporaryBlockStateTracker;
     private boolean nbtApiEnabled;
     // For unit tests
     private final boolean isMock;
@@ -239,7 +234,6 @@ public class AuraSkills extends JavaPlugin implements AuraSkillsPlugin {
         hookManager = new HookManager();
         userManager = new BukkitUserManager(this);
         presetManager = new PresetManager(this);
-        temporaryBlockStateTracker = new TemporaryBlockStateTracker(this);
         generateConfigs(); // Generate default config files if missing
         generateDefaultMenuFiles();
         // Handle migration
@@ -333,26 +327,6 @@ public class AuraSkills extends JavaPlugin implements AuraSkillsPlugin {
     public void onDisable() {
         if (scheduler != null) {
             scheduler.shutdown();
-        }
-        CriticalHandler.clearAll();
-        if (temporaryBlockStateTracker != null) {
-            temporaryBlockStateTracker.clearAll();
-        }
-        if (levelManager != null) {
-            try {
-                levelManager.getLeveler(BrewingLeveler.class).clearTrackedBrewingStands();
-            } catch (IllegalArgumentException ignored) {
-            }
-            try {
-                levelManager.getLeveler(JumpingLeveler.class).clearJumpState();
-            } catch (IllegalArgumentException ignored) {
-            }
-        }
-        if (manaAbilityManager != null) {
-            try {
-                manaAbilityManager.getProvider(ChargedShot.class).cleanupAll();
-            } catch (IllegalArgumentException ignored) {
-            }
         }
         if (userManager != null) {
             // Save users
@@ -512,7 +486,6 @@ public class AuraSkills extends JavaPlugin implements AuraSkillsPlugin {
         pm.registerEvents(new DamageListener(this), this);
         pm.registerEvents(new CriticalHandler(this), this);
         pm.registerEvents(new BlockInteractions(this), this);
-        pm.registerEvents(temporaryBlockStateTracker, this);
         pm.registerEvents(new BlockLootHandler(this), this);
         pm.registerEvents(new FishingLootHandler(this), this);
         pm.registerEvents(new MobLootHandler(this), this);
@@ -710,10 +683,6 @@ public class AuraSkills extends JavaPlugin implements AuraSkillsPlugin {
     @Override
     public BackupProvider getBackupProvider() {
         return backupProvider;
-    }
-
-    public TemporaryBlockStateTracker getTemporaryBlockStateTracker() {
-        return temporaryBlockStateTracker;
     }
 
     @Override

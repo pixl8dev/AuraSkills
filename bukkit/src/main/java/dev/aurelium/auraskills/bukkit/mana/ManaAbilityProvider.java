@@ -23,7 +23,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public abstract class ManaAbilityProvider implements Listener {
@@ -93,13 +92,8 @@ public abstract class ManaAbilityProvider implements Listener {
         consumeMana(player, user, event.getManaUsed());
 
         if (duration != 0) {
-            UUID uuid = player.getUniqueId();
-            plugin.getScheduler().scheduleSync(() -> {
-                Player onlinePlayer = plugin.getServer().getPlayer(uuid);
-                if (onlinePlayer != null) {
-                    stop(onlinePlayer);
-                }
-            }, duration * 50L, TimeUnit.MILLISECONDS);
+            //Schedules stop
+            plugin.getScheduler().scheduleSync(() -> stop(player), duration * 50L, TimeUnit.MILLISECONDS);
         } else {
             stop(player);
         }

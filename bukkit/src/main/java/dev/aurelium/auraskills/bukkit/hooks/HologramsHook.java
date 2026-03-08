@@ -1,7 +1,6 @@
 package dev.aurelium.auraskills.bukkit.hooks;
 
 import dev.aurelium.auraskills.api.trait.Traits;
-import dev.aurelium.auraskills.bukkit.listeners.CriticalHandler;
 import dev.aurelium.auraskills.common.AuraSkillsPlugin;
 import dev.aurelium.auraskills.common.config.Option;
 import dev.aurelium.auraskills.common.hooks.Hook;
@@ -69,7 +68,7 @@ public abstract class HologramsHook extends Hook implements Listener {
             return;
         }
 
-        boolean critical = CriticalHandler.isCritical(player);
+        boolean critical = player.hasMetadata("skillsCritical");
 
         createHologram(getLocation(event.getEntity()), getText(event.getFinalDamage(), critical), player);
     }

@@ -11,7 +11,6 @@ import dev.aurelium.auraskills.common.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -27,9 +26,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,13 +37,11 @@ import java.util.stream.Collectors;
 
 public class BrewingLeveler extends SourceLeveler {
 
-    private final Map<BrewingStandPosition, BrewingStandData> brewingStands;
-    private final NamespacedKey brewingStandOwnerKey;
+    private final Map<BlockPosition, BrewingStandData> brewingStands;
 
     public BrewingLeveler(AuraSkills plugin) {
         super(plugin, SourceTypes.BREWING);
         this.brewingStands = new ConcurrentHashMap<>();
-        this.brewingStandOwnerKey = new NamespacedKey(plugin, "brewing_stand_owner");
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -64,10 +59,9 @@ public class BrewingLeveler extends SourceLeveler {
         if (source.getTrigger() == BrewingXpSource.BrewTriggers.TAKEOUT) {
             checkBrewedSlots(event);
         } else if (source.getTrigger() == BrewingXpSource.BrewTriggers.BREW) {
-            UUID ownerUuid = getBrewingStandOwner(event.getBlock());
-            if (ownerUuid == null) return;
+            if (!event.getBlock().hasMetadata("skillsBrewingStandOwner")) return;
 
-            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(ownerUuid);
+            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(event.getBlock().getMetadata("skillsBrewingStandOwner").get(0).asString()));
             if (!offlinePlayer.isOnline()) {
                 return;
             }
@@ -105,7 +99,7 @@ public class BrewingLeveler extends SourceLeveler {
         // Get the brewing stand data
         Location location = inventory.getLocation();
         if (location == null) return;
-        BrewingStandPosition standPosition = BrewingStandPosition.from(location.getBlock());
+        BlockPosition standPosition = BukkitBlock.from(location.getBlock());
         BrewingStandData standData = brewingStands.get(standPosition);
         if (standData == null) return;
 
@@ -156,19 +150,15 @@ public class BrewingLeveler extends SourceLeveler {
             if (blockState instanceof BrewingStand brewingStand) {
                 BrewerInventory after = brewingStand.getInventory();
                 ItemStack[] afterItems = Arrays.copyOf(after.getContents(), 3); // Items in result slots after
-                BrewingStandPosition pos = BrewingStandPosition.from(event.getBlock());
+                BlockPosition pos = BukkitBlock.from(event.getBlock());
                 BrewingStandData standData = getBrewingStandData(clonedIngredient, beforeItems, afterItems, pos);
-                if (standData.isEmpty()) {
-                    brewingStands.remove(pos);
-                } else {
-                    brewingStands.put(pos, standData); // Register the stand data
-                }
+                brewingStands.put(pos, standData); // Register the stand data
             }
         }, 50, TimeUnit.MILLISECONDS);
     }
 
     @NotNull
-    private BrewingStandData getBrewingStandData(ItemStack ingredient, ItemStack[] beforeItems, ItemStack[] afterItems, BrewingStandPosition pos) {
+    private BrewingStandData getBrewingStandData(ItemStack ingredient, ItemStack[] beforeItems, ItemStack[] afterItems, BlockPosition pos) {
         BrewingStandData standData = brewingStands.getOrDefault(pos, new BrewingStandData());
         // Set the items that changed as brewed
         for (int i = 0; i < 3; i++) {
@@ -195,7 +185,7 @@ public class BrewingLeveler extends SourceLeveler {
         if (block.getType() != Material.BREWING_STAND) {
             return;
         }
-        setBrewingStandOwner(block, event.getPlayer().getUniqueId());
+        block.setMetadata("skillsBrewingStandOwner", new FixedMetadataValue(plugin, event.getPlayer().getUniqueId()));
     }
 
     // Un-marks brewing stand as owned by player when broken
@@ -221,17 +211,14 @@ public class BrewingLeveler extends SourceLeveler {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onChunkUnload(ChunkUnloadEvent event) {
-        brewingStands.keySet().removeIf(key -> key.isInChunk(event.getChunk()));
-    }
-
     private void cleanupBrewingStand(Block block) {
         if (block.getType() != Material.BREWING_STAND) {
             return;
         }
-        clearBrewingStandOwner(block);
-        brewingStands.remove(BrewingStandPosition.from(block));
+        if (block.hasMetadata("skillsBrewingStandOwner")) {
+            block.removeMetadata("skillsBrewingStandOwner", plugin);
+        }
+        brewingStands.remove(BukkitBlock.from(block));
     }
 
     // Marks brewing stand as owned by player when opened if unclaimed
@@ -249,51 +236,9 @@ public class BrewingLeveler extends SourceLeveler {
             return;
         }
         Block block = inventory.getLocation().getBlock();
-        if (getBrewingStandOwner(block) == null) {
-            setBrewingStandOwner(block, event.getPlayer().getUniqueId());
+        if (!block.hasMetadata("skillsBrewingStandOwner")) {
+            block.setMetadata("skillsBrewingStandOwner", new FixedMetadataValue(plugin, event.getPlayer().getUniqueId()));
         }
-    }
-
-    @Nullable
-    public UUID getBrewingStandOwner(Block block) {
-        BlockState blockState = block.getState();
-        if (!(blockState instanceof BrewingStand brewingStand)) {
-            return null;
-        }
-        PersistentDataContainer container = brewingStand.getPersistentDataContainer();
-        String owner = container.get(brewingStandOwnerKey, PersistentDataType.STRING);
-        if (owner == null || owner.isEmpty()) {
-            return null;
-        }
-        try {
-            return UUID.fromString(owner);
-        } catch (IllegalArgumentException ignored) {
-            container.remove(brewingStandOwnerKey);
-            brewingStand.update(true, false);
-            return null;
-        }
-    }
-
-    private void setBrewingStandOwner(Block block, UUID owner) {
-        BlockState blockState = block.getState();
-        if (!(blockState instanceof BrewingStand brewingStand)) {
-            return;
-        }
-        brewingStand.getPersistentDataContainer().set(brewingStandOwnerKey, PersistentDataType.STRING, owner.toString());
-        brewingStand.update(true, false);
-    }
-
-    private void clearBrewingStandOwner(Block block) {
-        BlockState blockState = block.getState();
-        if (!(blockState instanceof BrewingStand brewingStand)) {
-            return;
-        }
-        brewingStand.getPersistentDataContainer().remove(brewingStandOwnerKey);
-        brewingStand.update(true, false);
-    }
-
-    public void clearTrackedBrewingStands() {
-        brewingStands.clear();
     }
 
     @Nullable
@@ -366,19 +311,6 @@ public class BrewingLeveler extends SourceLeveler {
             this.ingredients.clear();
         }
 
-    }
-
-    private record BrewingStandPosition(String worldName, BlockPosition position) {
-
-        private static BrewingStandPosition from(Block block) {
-            return new BrewingStandPosition(block.getWorld().getName(), BukkitBlock.from(block));
-        }
-
-        private boolean isInChunk(org.bukkit.Chunk chunk) {
-            return worldName.equals(chunk.getWorld().getName())
-                    && (position.getX() >> 4) == chunk.getX()
-                    && (position.getZ() >> 4) == chunk.getZ();
-        }
     }
 
 }

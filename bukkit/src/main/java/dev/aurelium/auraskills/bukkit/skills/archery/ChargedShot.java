@@ -15,29 +15,23 @@ import dev.aurelium.auraskills.common.scheduler.TaskRunnable;
 import dev.aurelium.auraskills.common.user.User;
 import dev.aurelium.auraskills.common.util.text.TextUtil;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class ChargedShot extends ManaAbilityProvider {
 
-    private final NamespacedKey multiplierKey;
-
     public ChargedShot(AuraSkills plugin) {
         super(plugin, ManaAbilities.CHARGED_SHOT, ManaAbilityMessage.CHARGED_SHOT_SHOOT, null);
-        this.multiplierKey = new NamespacedKey(plugin, "charged_shot_multiplier");
         tickChargedShotCooldown();
     }
 
@@ -50,7 +44,7 @@ public class ChargedShot extends ManaAbilityProvider {
         Object obj = user.getMetadata().get("charged_shot_projectile");
         if (!(obj instanceof Entity projectile)) return;
 
-        projectile.getPersistentDataContainer().set(multiplierKey, PersistentDataType.DOUBLE, 1 + damagePercent / 100);
+        projectile.setMetadata("ChargedShotMultiplier", new FixedMetadataValue(plugin, 1 + damagePercent / 100));
         // Play sound
         if (manaAbility.optionBoolean("enable_sound", true)) {
             player.playSound(player.getLocation(), Sound.ENTITY_EVOKER_CAST_SPELL, 0.5f, 1);
@@ -156,33 +150,11 @@ public class ChargedShot extends ManaAbilityProvider {
     }
 
     private DamageModifier applyChargedShot(Entity attacker) {
-        Double multiplier = attacker.getPersistentDataContainer().get(multiplierKey, PersistentDataType.DOUBLE);
-        if (multiplier == null) {
+        if (!attacker.hasMetadata("ChargedShotMultiplier")) {
             return DamageModifier.none();
         }
+        double multiplier = attacker.getMetadata("ChargedShotMultiplier").get(0).asDouble();
         return new DamageModifier(multiplier - 1.0, DamageModifier.Operation.ADD_COMBINED);
-    }
-
-    @EventHandler
-    public void onProjectileHit(ProjectileHitEvent event) {
-        clearProjectileState(event.getEntity());
-    }
-
-    @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
-        clearProjectileState(event.getEntity());
-    }
-
-    public void cleanupAll() {
-        for (var world : plugin.getServer().getWorlds()) {
-            for (Entity entity : world.getEntities()) {
-                clearProjectileState(entity);
-            }
-        }
-    }
-
-    private void clearProjectileState(Entity entity) {
-        entity.getPersistentDataContainer().remove(multiplierKey);
     }
 
     @Override

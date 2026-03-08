@@ -11,17 +11,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class JumpingLeveler extends SourceLeveler {
 
     private final Set<UUID> prevPlayersOnGround = Sets.newConcurrentHashSet();
-    private final Map<UUID, Integer> jumpCounts = new ConcurrentHashMap<>();
 
     public JumpingLeveler(AuraSkills plugin) {
         super(plugin, SourceTypes.JUMPING);
@@ -67,13 +65,18 @@ public class JumpingLeveler extends SourceLeveler {
         JumpingXpSource source = skillSource.source();
         Skill skill = skillSource.skill();
 
-        UUID uuid = player.getUniqueId();
-        int jumpCount = jumpCounts.merge(uuid, 1, Integer::sum);
-        if (jumpCount >= source.getInterval()) {
-            if (failsChecks(event, player, player.getLocation(), skill)) return;
+        if (player.hasMetadata("skillsJumps")) {
+            player.setMetadata("skillsJumps", new FixedMetadataValue(plugin, player.getMetadata("skillsJumps").get(0).asInt() + 1));
+            if (player.getMetadata("skillsJumps").get(0).asInt() >= source.getInterval()) {
 
-            plugin.getLevelManager().addXp(plugin.getUser(player), skill, source, source.getXp());
-            jumpCounts.remove(uuid);
+                if (failsChecks(event, player, player.getLocation(), skill)) return;
+
+                plugin.getLevelManager().addXp(plugin.getUser(player), skill, source, source.getXp());
+
+                player.removeMetadata("skillsJumps", plugin);
+            }
+        } else {
+            player.setMetadata("skillsJumps", new FixedMetadataValue(plugin, 1));
         }
     }
 
@@ -81,12 +84,7 @@ public class JumpingLeveler extends SourceLeveler {
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         prevPlayersOnGround.remove(player.getUniqueId());
-        jumpCounts.remove(player.getUniqueId());
-    }
-
-    public void clearJumpState() {
-        prevPlayersOnGround.clear();
-        jumpCounts.clear();
+        player.removeMetadata("skillsJumps", plugin);
     }
 
 }
