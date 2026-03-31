@@ -209,7 +209,7 @@ public abstract class RegionManager {
             }
         }
         if (!serverShutdown) {
-            plugin.getScheduler().scheduleSync(() -> {
+            plugin.getScheduler().scheduleAsync(() -> {
                 synchronized (ioLock) {
                     saving = false;
                 }
