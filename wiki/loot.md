@@ -105,7 +105,7 @@ enchantments:
 
 Basic example of an item loot:
 
-```
+```yaml
 - type: item
   material: iron_ingot
   weight: 10
@@ -114,7 +114,7 @@ Basic example of an item loot:
 
 Here is a more complex example with display name, lore, and enchantments:
 
-```
+```yaml
 - type: item
   material: diamond_sword
   weight: 5
@@ -132,7 +132,7 @@ Here is a more complex example with display name, lore, and enchantments:
 
 Here is a potion with base potion data and custom effects:
 
-```
+```yaml
 - type: item
   material: potion
   weight: 10
@@ -151,7 +151,7 @@ Here is a potion with base potion data and custom effects:
 
 An item with hidden enchants using item flags and custom model data using the nbt section
 
-```
+```yaml
 - type: item
   material: paper
   weight: 10
@@ -176,7 +176,7 @@ Command loot keys:
 
 Example:
 
-```
+```yaml
 - type: command
   weight: 10
   executor: console
@@ -204,11 +204,79 @@ Entity loot keys:
 
 ## Loot selection
 
-The way loot is selected is fairly straightforward:
+Loot selection logic uses the following steps:
 
 1. The loot table is determined by skill that corresponds to the action the player does. For block based loot, the block must be a source for a supported skill (foraging, mining, excavation).
 2. A loot pool is selected from the loot table starting from the highest priority loot pool. Whether pool is selected is base on the pool's base\_chance and any added chances. If a pool is not selected, the pool with the next highest selection priority will be attempted. If no loot pool gets selected, the below steps do not apply.
 3. A single loot entry is selected from the pool based on the weight of the entry. A higher weight makes it more likely for it to be selected. The exact chance is calculated by `weight / sum of all weights in pool`.
+
+## Loot requirements
+
+Loot requirements restrict obtaining loot unless the player meets the defined requirements. Requirements can be set
+for an entire loot table, a loot pool, or a loot entry using the `requirements` key.
+
+The `requirements` key is a list of mappings, where each mapping is a requirement. **The types of requirements available are
+explained in [block requirements](skills/block-requirements.md#requirement-types)**, since both use the same system.
+
+### Examples
+
+Require at least Excavation level 5 to obtain any loot from the entire loot table file:
+
+```yaml
+type: block
+requirements:
+  - type: skill_level
+    skill: excavation
+    level: 5
+pools:
+  # ...
+```
+
+Require at least 20 Strength stat to obtain loot from the `rare` loot pool:
+
+```yaml
+type: fishing
+pools:
+  rare:
+    base_chance: 2
+    selection_priority: 1
+    requirements:
+      - type: stat
+        stat: strength
+        value: 20
+    loot:
+      # ...
+```
+
+Require a permission node to obtain `iron_ingot` from the `rare` pool:
+
+```yaml
+type: fishing
+pools:
+  rare:
+    base_chance: 2
+    selection_priority: 1
+    loot:
+      - type: item
+        material: iron_ingot
+        weight: 15
+        amount: 1
+        requirements:
+          - type: permission
+            permission: some.permission.node
+```
+
+Require that the player is not in the nether **and** at least Mining level 10:
+
+```yaml
+requirements:
+  - type: excluded_world
+    worlds:
+      - world_nether
+  - type: skill_level
+    skill: mining
+    level: 10
+```
 
 ## Custom loot tables
 

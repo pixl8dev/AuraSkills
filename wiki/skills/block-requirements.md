@@ -41,16 +41,16 @@ When none of the above allow options are defined, the block cannot be broken, pl
 * `requirements` - A map list of the requirement nodes for this block. All the requirements nodes must be met to be able to break/place
   the block defined by `material`. The keys for each node are listed below.
 
-### Requirement node keys
+## Requirement types
 
 The following keys are defined in each mapping of the `requirements` list of a requirement section.
 
-* `type` - The type of requirement, which can be `skill_level`, `permission`, `excluded_world`, or `stat`
+* `type` - The type of requirement, which can be `skill_level`, `permission`, `world`, `excluded_world`, `stat`, `biome`, `region`, `item`, or `enchantment`.
 * `message` - The error message to send to the player when the requirement is not met. Supports MiniMessage and PlaceholderAPI (optional).
 
 Each type has specific keys below that must be added to define type behavior. These keys are added in the same indent level as `type`.
 
-#### Skill level
+### Skill level
 
 The `skill_level` type requires the player to be at least a specific level in a skill.
 
@@ -58,27 +58,131 @@ Keys:
   * `skill` - The name of the skill to add a level requirement for
   * `level` - The minimum skill level the player must be
 
-#### Permission
+Example:
+
+```yaml
+- type: skill_level
+  skill: farming
+  level: 10
+```
+
+### Permission
 
 The `permission` type requires the player to have a specific permission node.
 
 Keys:
   * `permission` - The permission node required
 
-#### Excluded world
+Example:
+
+```yaml
+- type: permission
+  permission: some.permission.node
+```
+
+### World
+
+The `world` type requires the player to be in a specific world.
+
+Keys:
+  * `world` - The name of the world the player is required to be in
+
+Example:
+
+```yaml
+- type: world
+  world: world_nether
+```
+
+### Excluded world
 
 The `excluded_world` type defines a list of worlds that will make the requirement fail if the player is in one of them.
 
 Keys:
   * `worlds` - The list of worlds to not allow the player to be in
 
-#### Stat
+Example:
+
+```yaml
+- type: excluded_world
+  worlds:
+    - world_the_end
+```
+
+### Stat
 
 The `stat` type requires the player to be at least a specific stat level.
 
 Keys:
   * `stat` - The name of the stat to add a level requirement for
   * `value` - The minimum stat value that the player must be
+
+Example:
+
+```yaml
+- type: stat
+  stat: toughness
+  value: 15
+```
+
+### Biome
+
+The `biome` type requires the player to be in the specified biome
+
+Keys:
+  * `biome` - The name of the biome the player is required to be in
+
+Example:
+
+```yaml
+- type: biome
+  biome: swamp
+```
+
+### Region
+
+The `region` type requires the player to be in the specified WorldGuard region.
+
+Keys:
+  * `region` - The name of the WorldGuard region the player is required to be in
+
+Example:
+
+```yaml
+- type: region
+  region: spawn
+```
+
+### Item
+
+The `item` type requires the player to hold a specific item.
+
+Keys:
+  * `item` - The material name of the item the player is required to hold
+
+Examples:
+
+```yaml
+- type: item
+  item: diamond_pickaxe
+```
+
+### Enchantment
+
+The `enchantment` type requires the player to have a specific enchantment on their held item.
+
+Keys:
+  * `enchantment` - The name of the enchantment to require
+  * `level` - THe required enchantment level, either a singular value or a min-max (optional)
+    * Examples of valid levels are `1` and `1-3`
+
+Examples:
+
+```yaml
+- type: enchantment
+  enchantment: sharpness
+  level: 4-5
+```
 
 ## General options
 
@@ -89,7 +193,7 @@ The `requirement.blocks` section in `config.yml` contains general options relate
 
 ## Example
 
-Example of multiple requirement sections using all requirement node types:
+Example of multiple requirement sections using many requirement node types:
 
 ```yaml
 requirement:
