@@ -32,17 +32,8 @@ public class RegionListener implements Listener {
         RegionCoordinate regionCoordinate = new RegionCoordinate(event.getWorld().getName(), regionX, regionZ);
         Region region = regionManager.getRegion(regionCoordinate);
 
-        if (region == null || region.shouldReload()) {
-            plugin.getScheduler().executeAsync(() -> {
-                Region obtainedRegion = regionManager.getRegion(regionCoordinate);
-                if (obtainedRegion == null) {
-                    obtainedRegion = new Region(event.getWorld().getName(), regionX, regionZ);
-                    regionManager.setRegion(regionCoordinate, obtainedRegion);
-                    regionManager.loadRegion(obtainedRegion);
-                } else if (obtainedRegion.shouldReload()) {
-                    regionManager.loadRegion(obtainedRegion);
-                }
-            });
+        if (region == null || !region.isLoaded() || region.shouldReload()) {
+            regionManager.loadRegionAsync(event.getWorld().getName(), regionX, regionZ);
         }
     }
 

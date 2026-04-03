@@ -24,6 +24,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
@@ -33,11 +34,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Treecapitator extends ReadiedManaAbility {
 
     private final boolean giveXp;
+    @Nullable
+    private Material worldEditWandMaterial;
 
     public Treecapitator(AuraSkills plugin) {
         super(plugin, ManaAbilities.TREECAPITATOR, ManaAbilityMessage.TREECAPITATOR_START, ManaAbilityMessage.TREECAPITATOR_END,
                 new String[]{"_AXE"}, new Action[]{Action.RIGHT_CLICK_AIR, Action.RIGHT_CLICK_BLOCK});
         this.giveXp = ManaAbilities.TREECAPITATOR.optionBoolean("give_xp", true);
+        this.worldEditWandMaterial = resolveWorldEditWandMaterial();
     }
 
     @Override
@@ -52,16 +56,9 @@ public class Treecapitator extends ReadiedManaAbility {
 
     @Override
     protected boolean materialMatches(String checked, Player player) {
-        // Don't ready WorldEdit axe if WorldEdit is available and the player has permission for the wand.
-        if (plugin.getServer().getPluginManager().isPluginEnabled("WorldEdit") && player.hasPermission("worldedit.wand")) {
-            String wandItem = WorldEdit.getInstance().getConfiguration().wandItem;
-            String wandString = wandItem.contains(":") ? wandItem.split(":")[1] : wandItem;
-            Material wandMaterial = Material.matchMaterial(wandString.toUpperCase(Locale.ROOT));
-            Material checkMaterial = Material.matchMaterial(checked.toUpperCase(Locale.ROOT));
-
-            if (wandMaterial == checkMaterial) {
-                return false;
-            }
+        Material checkMaterial = Material.matchMaterial(checked.toUpperCase(Locale.ROOT));
+        if (worldEditWandMaterial != null && player.hasPermission("worldedit.wand") && worldEditWandMaterial == checkMaterial) {
+            return false;
         }
 
         for (String material : getMaterials()) {
@@ -70,6 +67,18 @@ public class Treecapitator extends ReadiedManaAbility {
             }
         }
         return false;
+    }
+
+    @Nullable
+    private Material resolveWorldEditWandMaterial() {
+        Plugin worldEditPlugin = plugin.getServer().getPluginManager().getPlugin("WorldEdit");
+        if (worldEditPlugin == null || !worldEditPlugin.isEnabled()) {
+            return null;
+        }
+
+        String wandItem = WorldEdit.getInstance().getConfiguration().wandItem;
+        String wandString = wandItem.contains(":") ? wandItem.split(":")[1] : wandItem;
+        return Material.matchMaterial(wandString.toUpperCase(Locale.ROOT));
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

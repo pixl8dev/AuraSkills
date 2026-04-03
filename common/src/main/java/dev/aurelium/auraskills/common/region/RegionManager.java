@@ -45,6 +45,7 @@ public abstract class RegionManager {
 
     public void loadRegion(Region region) {
         synchronized (ioLock) {
+            if (region.isLoaded() && !region.shouldReload()) return;
             if (region.isLoading()) return;
             region.setLoading(true);
 
@@ -71,6 +72,7 @@ public abstract class RegionManager {
                     region.setReload(false);
                 }
             }
+            region.setLoaded(true);
             region.setLoading(false);
         }
     }

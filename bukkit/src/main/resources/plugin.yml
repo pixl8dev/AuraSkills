@@ -5,6 +5,7 @@ description: The ultra-versatile RPG skills plugin
 author: Archyx
 website: https://aurelium.dev/auraskills
 softdepend:
+- WorldEdit
 - WorldGuard
 - PlaceholderAPI
 - HolographicDisplays

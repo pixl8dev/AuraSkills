@@ -14,6 +14,7 @@ public class Region {
     private final ConcurrentMap<ChunkCoordinate, ChunkData> chunks;
     private boolean reload;
     private boolean loading;
+    private boolean loaded;
 
     public Region(String worldName, int x, int z) {
         this.worldName = worldName;
@@ -22,6 +23,7 @@ public class Region {
         this.chunks = new ConcurrentHashMap<>();
         this.reload = false;
         this.loading = false;
+        this.loaded = false;
     }
 
     public String getWorldName() {
@@ -67,6 +69,14 @@ public class Region {
 
     public void setLoading(boolean loading) {
         this.loading = loading;
+    }
+
+    public boolean isLoaded() {
+        return loaded;
+    }
+
+    public void setLoaded(boolean loaded) {
+        this.loaded = loaded;
     }
 
 }

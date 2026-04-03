@@ -3,18 +3,22 @@ package dev.aurelium.auraskills.common.scheduler;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import dev.aurelium.auraskills.common.AuraSkillsPlugin;
 
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public abstract class Scheduler {
 
+    private static final int ASYNC_THREADS = Math.max(2, Math.min(8, Runtime.getRuntime().availableProcessors()));
+
     private final AuraSkillsPlugin plugin;
 
-    private final ExecutorService asyncExecutor = Executors.newCachedThreadPool(
-            new ThreadFactoryBuilder().setNameFormat("auraskills-async-task-%d").build());
-    private final ScheduledExecutorService asyncScheduler = Executors.newScheduledThreadPool(0,
+    private final ExecutorService asyncExecutor = createAsyncExecutor();
+    private final ScheduledExecutorService asyncScheduler = Executors.newScheduledThreadPool(1,
             new ThreadFactoryBuilder().setNameFormat("auraskills-async-scheduler-%d").build());
 
     public Scheduler(final AuraSkillsPlugin plugin) {
@@ -54,6 +58,18 @@ public abstract class Scheduler {
             asyncScheduler.shutdownNow();
             Thread.currentThread().interrupt();
         }
+    }
+
+    private ExecutorService createAsyncExecutor() {
+        BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
+        return new ThreadPoolExecutor(
+                ASYNC_THREADS,
+                ASYNC_THREADS,
+                0L,
+                TimeUnit.MILLISECONDS,
+                queue,
+                new ThreadFactoryBuilder().setNameFormat("auraskills-async-task-%d").build()
+        );
     }
 
 }

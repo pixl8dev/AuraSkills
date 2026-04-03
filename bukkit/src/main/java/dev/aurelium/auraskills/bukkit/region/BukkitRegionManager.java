@@ -10,15 +10,20 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class BukkitRegionManager extends RegionManager {
 
     private final AuraSkills plugin;
+    private final Set<RegionCoordinate> pendingRegionLoads;
     @Nullable
     private BlockLeveler blockLeveler; // Lazy initialized in handleBlockPlace
 
     public BukkitRegionManager(AuraSkills plugin) {
         super(plugin);
         this.plugin = plugin;
+        this.pendingRegionLoads = ConcurrentHashMap.newKeySet();
     }
 
     public boolean isPlacedBlock(Block block) {
@@ -63,28 +68,33 @@ public class BukkitRegionManager extends RegionManager {
     }
 
     public void addPlacedBlock(Block block) {
-        Region region = getRegionFromBlock(block);
-        // Create region if it does not exist
-        if (region == null || region.shouldReload()) {
-            addLoadRegionAsync(block);
-        } else {
-            addToRegion(block, region);
+        RegionCoordinate regionCoordinate = getRegionCoordinate(block);
+        Region region = regions.computeIfAbsent(regionCoordinate, ignored ->
+                new Region(block.getWorld().getName(), regionCoordinate.getX(), regionCoordinate.getZ()));
+
+        addToRegion(block, region);
+
+        if (!region.isLoaded() || region.shouldReload()) {
+            loadRegionAsync(regionCoordinate, region);
         }
     }
 
-    private void addLoadRegionAsync(Block block) {
-        plugin.getScheduler().executeAsync(() -> {
-            Region region = getRegionFromBlock(block);
-            if (region == null) {
-                int regionX = (int) Math.floor((double) block.getChunk().getX() / 32.0);
-                int regionZ = (int) Math.floor((double) block.getChunk().getZ() / 32.0);
-                region = new Region(block.getWorld().getName(), regionX, regionZ);
+    public void loadRegionAsync(String worldName, int regionX, int regionZ) {
+        RegionCoordinate regionCoordinate = new RegionCoordinate(worldName, regionX, regionZ);
+        Region region = regions.computeIfAbsent(regionCoordinate, ignored -> new Region(worldName, regionX, regionZ));
+        loadRegionAsync(regionCoordinate, region);
+    }
 
-                RegionCoordinate regionCoordinate = new RegionCoordinate(block.getWorld().getName(), regionX, regionZ);
-                regions.put(regionCoordinate, region);
+    private void loadRegionAsync(RegionCoordinate regionCoordinate, Region region) {
+        if (!pendingRegionLoads.add(regionCoordinate)) {
+            return;
+        }
+        plugin.getScheduler().executeAsync(() -> {
+            try {
+                loadRegion(region);
+            } finally {
+                pendingRegionLoads.remove(regionCoordinate);
             }
-            loadRegion(region);
-            addToRegion(block, region);
         });
     }
 
@@ -118,14 +128,17 @@ public class BukkitRegionManager extends RegionManager {
 
     @Nullable
     private Region getRegionFromBlock(Block block) {
+        return regions.get(getRegionCoordinate(block));
+    }
+
+    private RegionCoordinate getRegionCoordinate(Block block) {
         int chunkX = block.getChunk().getX();
         int chunkZ = block.getChunk().getZ();
 
         int regionX = (int) Math.floor((double) chunkX / 32.0);
         int regionZ = (int) Math.floor((double) chunkZ / 32.0);
 
-        RegionCoordinate regionCoordinate = new RegionCoordinate(block.getWorld().getName(), regionX, regionZ);
-        return regions.get(regionCoordinate);
+        return new RegionCoordinate(block.getWorld().getName(), regionX, regionZ);
     }
 
     @Override

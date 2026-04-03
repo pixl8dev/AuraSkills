@@ -10,10 +10,12 @@ import dev.aurelium.auraskills.common.scheduler.TaskStatus;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Proxy;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LeaderboardSorterTest {
 
@@ -43,6 +45,35 @@ public class LeaderboardSorterTest {
 
         assertEquals(0, scheduler.syncSchedules);
         assertEquals(1, scheduler.asyncSchedules);
+    }
+
+    @Test
+    void testSchedulerExecuteAsyncUsesBoundedThreadPool() throws InterruptedException {
+        RecordingScheduler scheduler = new RecordingScheduler();
+        int maxThreads = Math.max(2, Math.min(8, Runtime.getRuntime().availableProcessors()));
+        int taskCount = maxThreads * 4;
+        CountDownLatch started = new CountDownLatch(maxThreads);
+        CountDownLatch release = new CountDownLatch(1);
+        long initialThreadCount = countAsyncThreads();
+
+        try {
+            for (int i = 0; i < taskCount; i++) {
+                scheduler.executeAsync(() -> {
+                    started.countDown();
+                    try {
+                        release.await(5, TimeUnit.SECONDS);
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+                });
+            }
+
+            assertTrue(started.await(2, TimeUnit.SECONDS));
+            assertTrue(countAsyncThreads() - initialThreadCount <= maxThreads);
+        } finally {
+            release.countDown();
+            scheduler.shutdown();
+        }
     }
 
     private AuraSkillsPlugin createPlugin(RecordingScheduler scheduler) {
@@ -79,6 +110,14 @@ public class LeaderboardSorterTest {
                     case "logger" -> logger;
                     default -> null;
                 });
+    }
+
+    private long countAsyncThreads() {
+        return Thread.getAllStackTraces()
+                .keySet()
+                .stream()
+                .filter(thread -> thread.getName().startsWith("auraskills-async-task-"))
+                .count();
     }
 
     private static final class RecordingScheduler extends Scheduler {
